@@ -16,17 +16,14 @@ const CatalogBlock = React.createClass({
 
   render: function () {
     const catalogCode = this.props.listOfGoods.map((item) =>
-      React.DOM.tr(
-        { key: item.gId, className: "CatalogRow" },
-        React.DOM.td({ className: "RowCell" }, item.gId),
-        React.DOM.td({ className: "RowCell" }, item.gName),
-        React.DOM.td({ className: "RowCell" }, item.gPrice),
-        React.DOM.td(
-          { className: "RowCell" },
-          React.DOM.img({ src: item.imageURL }, null)
-        ),
-        React.DOM.td({ className: "RowCell" }, item.gRemains)
-      )
+      React.createElement(CatalogItem, {
+        key: item.gId,
+        gId: item.gId,
+        gName: item.gName,
+        gPrice: item.gPrice,
+        imageURL: item.imageURL,
+        gRemains: item.gRemains,
+      })
     );
 
     return React.DOM.table(
