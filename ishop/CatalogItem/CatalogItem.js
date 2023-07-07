@@ -11,15 +11,15 @@ const CatalogItem = React.createClass({
 
   render: function () {
     return React.DOM.tr(
-      { className: "CatalogRow" },
-      React.DOM.td({ className: "RowCell" }, item.gId),
-      React.DOM.td({ className: "RowCell" }, item.gName),
-      React.DOM.td({ className: "RowCell" }, item.gPrice),
+      { className: "CatalogItem" },
+      React.DOM.td({ className: "RowCell" }, this.props.gId),
+      React.DOM.td({ className: "RowCell" }, this.props.gName),
+      React.DOM.td({ className: "RowCell" }, this.props.gPrice),
       React.DOM.td(
         { className: "RowCell" },
-        React.DOM.img({ src: item.imageURL }, null)
+        React.DOM.img({ src: this.props.imageURL }, null)
       ),
-      React.DOM.td({ className: "RowCell" }, item.gRemains)
+      React.DOM.td({ className: "RowCell" }, this.props.gRemains)
     );
   },
 });

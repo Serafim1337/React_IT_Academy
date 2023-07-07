@@ -10,17 +10,4 @@
   text-align: center;
 }
 
-.CatalogBlock .CatalogRow {
-  line-height: 200px;
-}
 
-.CatalogBlock .RowCell {
-  border: 1px solid;
-  text-align: center;
-  min-width: 80px;
-}
-
-.CatalogBlock .RowCell img {
-  display: block;
-  width: 100px;
-}
