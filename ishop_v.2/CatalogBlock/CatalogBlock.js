@@ -26,13 +26,14 @@ const CatalogBlock = React.createClass({
   },
 
   deleteItemHandler: function (deleteItemId) {
-    this.setState((currState, props) => {
-      return {
-        stateListOfGoods:
-          currState.stateListOfGoods.filter(
-            (item) => item.gId != deleteItemId)
-      };
-    })
+    confirm('Are you sure?') ?
+      this.setState((currState, props) => {
+        return {
+          stateListOfGoods:
+            currState.stateListOfGoods.filter(
+              (item) => item.gId != deleteItemId)
+        };
+      }) : null;
   },
 
   render: function () {
