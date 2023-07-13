@@ -1,0 +1,18 @@
+.CatalogItem {
+  line-height: 200px;
+}
+
+.CatalogItem:hover {
+  cursor: pointer;
+}
+
+.CatalogItem .RowCell {
+  border: 1px solid;
+  text-align: center;
+  min-width: 80px;
+}
+
+.CatalogItem .RowCell img {
+  display: block;
+  width: 100px;
+}
