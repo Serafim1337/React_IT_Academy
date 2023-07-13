@@ -17,15 +17,26 @@ const CatalogBlock = React.createClass({
   getInitialState: function () {
     return {
       selectedItemId: null,
+      stateListOfGoods: this.props.listOfGoods,
     };
   },
 
-  ItemSelectHandler: function (selectedItemId) {
+  itemSelectHandler: function (selectedItemId) {
     this.setState({ selectedItemId });
   },
 
+  deleteItemHandler: function (deleteItemId) {
+    this.setState((currState, props) => {
+      return {
+        stateListOfGoods:
+          currState.stateListOfGoods.filter(
+            (item) => item.gId != deleteItemId)
+      };
+    })
+  },
+
   render: function () {
-    const catalogCode = this.props.listOfGoods.map((item) =>
+    const catalogCode = this.state.stateListOfGoods.map((item) =>
       React.createElement(CatalogItem, {
         key: item.gId,
         gId: item.gId,
@@ -33,8 +44,9 @@ const CatalogBlock = React.createClass({
         gPrice: item.gPrice,
         imageURL: item.imageURL,
         gRemains: item.gRemains,
-        cbItemSelectHandler: this.ItemSelectHandler,
+        cbItemSelectHandler: this.itemSelectHandler,
         selectedItemId: this.state.selectedItemId,
+        cbDeleteItemHandler: this.deleteItemHandler,
       })
     );
 
@@ -45,7 +57,7 @@ const CatalogBlock = React.createClass({
         React.DOM.tr(
           null,
           React.DOM.td(
-            { className: "HeaderTitle", colSpan: "5" },
+            { className: "HeaderTitle", colSpan: "6" },
             this.props.shopName
           )
         ),
@@ -55,7 +67,8 @@ const CatalogBlock = React.createClass({
           React.DOM.th({ className: "HeaderCell" }, "Name"),
           React.DOM.th({ className: "HeaderCell" }, "Price"),
           React.DOM.th({ className: "HeaderCell" }, "Image"),
-          React.DOM.th({ className: "HeaderCell" }, "Remains")
+          React.DOM.th({ className: "HeaderCell" }, "Remains"),
+          React.DOM.th({ className: "HeaderCell" }, "Control")
         )
       ),
       React.DOM.tbody({ className: "TableBody" }, catalogCode)

@@ -16,3 +16,7 @@
   display: block;
   width: 100px;
 }
+
+.CatalogItem .DeleteButton {
+  cursor: pointer;
+}
