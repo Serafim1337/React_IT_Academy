@@ -13,12 +13,11 @@ const CatalogItem = React.createClass({
   },
 
   itemSelectHandler: function (e) {
-    if (e.target.value != 'Delete') {
-      this.props.cbItemSelectHandler(e.currentTarget.dataset.item_id);
-    }
+    this.props.cbItemSelectHandler(e.currentTarget.dataset.item_id);
   },
 
   deleteItemHandler: function (e) {
+    e.stopPropagation();
     this.props.cbDeleteItemHandler(e.target.dataset.parent_item_id);
   },
 
