@@ -1,0 +1,42 @@
+.CatalogBlock {
+  border-spacing: 0;
+}
+
+.CatalogBlock .CatalogHeader {
+  background-color: rgb(214, 214, 214);
+}
+
+.CatalogBlock .CatalogHeader .HeaderTitle {
+  text-align: center;
+}
+
+
+.CatalogItem {
+  line-height: 200px;
+}
+
+.CatalogItem:hover {
+  cursor: pointer;
+}
+
+.CatalogItem .RowCell {
+  border: 1px solid;
+  text-align: center;
+  min-width: 80px;
+}
+
+.CatalogItem .RowCell img {
+  display: block;
+  width: 100px;
+}
+
+.CatalogItem .DeleteButton {
+  cursor: pointer;
+}
+#container {
+  margin: 0 auto;
+  width: fit-content;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/*# sourceMappingURL=bundle.css.map*/
