@@ -1,86 +1,96 @@
-import React from "react";
+import React, { Fragment } from "react";
+import PropTypes from 'prop-types';
 
 import './CatalogBlock.css';
 
 import CatalogItem from '../CatalogItem/CatalogItem';
+import CatalogItemShowcase from "../CatalogItemShowcase/CatalogItemShowcase";
 
-const CatalogBlock = React.createClass({
-  displayName: "CatalogBlock",
+class CatalogBlock extends React.Component {
 
-  propTypes: {
-    listOfGoods: React.PropTypes.arrayOf(
-      React.PropTypes.shape({
-        gId: React.PropTypes.number.isRequired,
-        gName: React.PropTypes.string.isRequired,
-        gPrice: React.PropTypes.number.isRequired,
-        imageURL: React.PropTypes.string.isRequired,
-        gRemains: React.PropTypes.number.isRequired,
+  static propTypes = {
+    listOfGoods: PropTypes.arrayOf(
+      PropTypes.shape({
+        gId: PropTypes.number.isRequired,
+        gName: PropTypes.string.isRequired,
+        gPrice: PropTypes.number.isRequired,
+        imageURL: PropTypes.string.isRequired,
+        gRemains: PropTypes.number.isRequired,
       })
     ),
-    shopName: React.PropTypes.string.isRequired,
-  },
+    shopName: PropTypes.string.isRequired,
+  };
 
-  getInitialState: function () {
-    return {
-      selectedItemId: null,
-      stateListOfGoods: this.props.listOfGoods,
-    };
-  },
+  state = {
+    selectedItemId: null,
+    stateListOfGoods: this.props.listOfGoods,
+  };
 
-  itemSelectHandler: function (selectedItemId) {
+  itemSelectHandler = (selectedItemId) => {
     this.setState({ selectedItemId });
-  },
+  };
 
-  deleteItemHandler: function (deleteItemId) {
+  deleteItemHandler = (deleteItemId) => {
     confirm('Are you sure?') ?
       this.setState((currState, props) => {
+        if (currState.selectedItemId == deleteItemId) {
+          currState.selectedItemId = null;
+        }
         return {
           stateListOfGoods:
             currState.stateListOfGoods.filter(
               (item) => item.gId != deleteItemId)
         };
       }) : null;
-  },
+  };
 
-  render: function () {
+  render() {
     const catalogCode = this.state.stateListOfGoods.map((item) =>
-      React.createElement(CatalogItem, {
-        key: item.gId,
-        gId: item.gId,
-        gName: item.gName,
-        gPrice: item.gPrice,
-        imageURL: item.imageURL,
-        gRemains: item.gRemains,
-        cbItemSelectHandler: this.itemSelectHandler,
-        selectedItemId: this.state.selectedItemId,
-        cbDeleteItemHandler: this.deleteItemHandler,
-      })
+      <CatalogItem
+        key={item.gId}
+        gId={item.gId}
+        gName={item.gName}
+        gPrice={item.gPrice}
+        imageURL={item.imageURL}
+        gRemains={item.gRemains}
+        cbItemSelectHandler={this.itemSelectHandler}
+        selectedItemId={this.state.selectedItemId}
+        cbDeleteItemHandler={this.deleteItemHandler} />
     );
 
-    return React.DOM.table(
-      { className: "CatalogBlock" },
-      React.DOM.thead(
-        { className: "CatalogHeader" },
-        React.DOM.tr(
-          null,
-          React.DOM.td(
-            { className: "HeaderTitle", colSpan: "6" },
-            this.props.shopName
-          )
-        ),
-        React.DOM.tr(
-          null,
-          React.DOM.th({ className: "HeaderCell" }, "ID"),
-          React.DOM.th({ className: "HeaderCell" }, "Name"),
-          React.DOM.th({ className: "HeaderCell" }, "Price"),
-          React.DOM.th({ className: "HeaderCell" }, "Image"),
-          React.DOM.th({ className: "HeaderCell" }, "Remains"),
-          React.DOM.th({ className: "HeaderCell" }, "Control")
-        )
-      ),
-      React.DOM.tbody({ className: "TableBody" }, catalogCode)
+    return (
+      <Fragment>
+        <table className="CatalogBlock">
+          <thead className="CatalogHeader">
+            <tr>
+              <td className="HeaderTitle" colSpan={6}>
+                {this.props.shopName}
+              </td>
+            </tr>
+            <tr>
+              <th className="HeaderCell">ID</th>
+              <th className="HeaderCell">Name</th>
+              <th className="HeaderCell">Price</th>
+              <th className="HeaderCell">Image</th>
+              <th className="HeaderCell">Remains</th>
+              <th className="HeaderCell">Control</th>
+            </tr>
+          </thead>
+          <tbody className="TableBody">
+            {catalogCode}
+          </tbody>
+        </table>
+        {this.state.selectedItemId &&
+          <CatalogItemShowcase
+            itemData={
+              this.state.stateListOfGoods.filter(
+                (item) => item.gId == this.state.selectedItemId)[0]
+            }
+          ></CatalogItemShowcase>
+        }
+      </Fragment>
     );
-  },
-});
+  };
+};
 
 export default CatalogBlock;

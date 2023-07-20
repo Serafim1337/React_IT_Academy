@@ -1,63 +1,61 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 import './CatalogItem.css';
 
+class CatalogItem extends React.Component {
 
+  static propTypes = {
+    gId: PropTypes.number.isRequired,
+    gName: PropTypes.string.isRequired,
+    gPrice: PropTypes.number.isRequired,
+    imageURL: PropTypes.string.isRequired,
+    gRemains: PropTypes.number.isRequired,
+    cbItemSelectHandler: PropTypes.func.isRequired,
+    selectedItemId: PropTypes.string,
+    cbDeleteItemHandler: PropTypes.func.isRequired,
+  };
 
-const CatalogItem = React.createClass({
-  displayName: "CatalogItem",
-
-  propTypes: {
-    gId: React.PropTypes.number.isRequired,
-    gName: React.PropTypes.string.isRequired,
-    gPrice: React.PropTypes.number.isRequired,
-    imageURL: React.PropTypes.string.isRequired,
-    gRemains: React.PropTypes.number.isRequired,
-    cbItemSelectHandler: React.PropTypes.func.isRequired,
-    selectedItemId: React.PropTypes.string,
-    cbDeleteItemHandler: React.PropTypes.func.isRequired,
-  },
-
-  itemSelectHandler: function (e) {
+  itemSelectHandler = (e) => {
     this.props.cbItemSelectHandler(e.currentTarget.dataset.item_id);
-  },
+  };
 
-  deleteItemHandler: function (e) {
+  deleteItemHandler = (e) => {
     e.stopPropagation();
     this.props.cbDeleteItemHandler(e.target.dataset.parent_item_id);
-  },
+  };
 
-  render: function () {
-    return React.DOM.tr(
-      {
-        className: "CatalogItem",
-        'data-item_id': this.props.gId,
-        onClick: this.itemSelectHandler,
-        style: {
+  render() {
+
+    return (
+      <tr
+        className="CatalogItem"
+        data-item_id={this.props.gId}
+        onClick={this.itemSelectHandler}
+        style={{
           backgroundColor:
             (this.props.selectedItemId == this.props.gId) ?
               'orange' : ''
-        },
-      },
-      React.DOM.td({ className: "RowCell" }, this.props.gId),
-      React.DOM.td({ className: "RowCell" }, this.props.gName),
-      React.DOM.td({ className: "RowCell" }, this.props.gPrice),
-      React.DOM.td(
-        { className: "RowCell" },
-        React.DOM.img({ src: this.props.imageURL }, null)
-      ),
-      React.DOM.td({ className: "RowCell" }, this.props.gRemains),
-      React.DOM.td({ className: "RowCell" },
-        React.DOM.input({
-          className: 'DeleteButton',
-          type: 'button',
-          value: 'Delete',
-          'data-parent_item_id': this.props.gId,
-          onClick: this.deleteItemHandler,
-        })
-      ),
+        }}>
+        <td className="RowCell">{this.props.gId}</td>
+        <td className="RowCell">{this.props.gName}</td>
+        <td className="RowCell">{this.props.gPrice}</td>
+        <td className="RowCell">
+          <img src={this.props.imageURL}></img>
+        </td>
+        <td className="RowCell">{this.props.gRemains}</td>
+        <td className="RowCell">
+          <input
+            className="DeleteButton"
+            type="button"
+            value="Delete"
+            data-parent_item_id={this.props.gId}
+            onClick={this.deleteItemHandler}>
+          </input>
+        </td>
+      </tr >
     );
-  },
-});
+  };
+};
 
 export default CatalogItem;
