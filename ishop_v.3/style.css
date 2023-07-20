@@ -3,3 +3,7 @@
   width: fit-content;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+
+#container .NewItemButton {
+  margin-top: 20px;
+}

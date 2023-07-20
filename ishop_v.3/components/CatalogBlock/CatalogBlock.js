@@ -5,6 +5,7 @@ import './CatalogBlock.css';
 
 import CatalogItem from '../CatalogItem/CatalogItem';
 import CatalogItemShowcase from "../CatalogItemShowcase/CatalogItemShowcase";
+import CatalogItemProperties from '../CatalogItemProperties/CatalogItemProperties'
 
 class CatalogBlock extends React.Component {
 
@@ -63,7 +64,7 @@ class CatalogBlock extends React.Component {
         <table className="CatalogBlock">
           <thead className="CatalogHeader">
             <tr>
-              <td className="HeaderTitle" colSpan={6}>
+              <td className="HeaderTitle" colSpan={7}>
                 {this.props.shopName}
               </td>
             </tr>
@@ -73,13 +74,21 @@ class CatalogBlock extends React.Component {
               <th className="HeaderCell">Price</th>
               <th className="HeaderCell">Image</th>
               <th className="HeaderCell">Remains</th>
-              <th className="HeaderCell">Control</th>
+              <th className="HeaderCell" colSpan={2}>Control</th>
             </tr>
           </thead>
           <tbody className="TableBody">
             {catalogCode}
           </tbody>
         </table>
+        <input
+          className="NewItemButton"
+          type="button"
+          value="New product"
+          data-parent_item_id={this.props.gId}
+          onClick={this.deleteItemHandler}>
+        </input>
+
         {this.state.selectedItemId &&
           <CatalogItemShowcase
             itemData={
@@ -88,6 +97,7 @@ class CatalogBlock extends React.Component {
             }
           ></CatalogItemShowcase>
         }
+
       </Fragment>
     );
   };

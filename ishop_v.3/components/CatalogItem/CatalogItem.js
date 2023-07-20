@@ -48,6 +48,14 @@ class CatalogItem extends React.Component {
           <input
             className="DeleteButton"
             type="button"
+            value="Edit"
+          >
+          </input>
+        </td>
+        <td className="RowCell">
+          <input
+            className="DeleteButton"
+            type="button"
             value="Delete"
             data-parent_item_id={this.props.gId}
             onClick={this.deleteItemHandler}>
