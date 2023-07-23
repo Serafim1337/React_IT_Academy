@@ -13,11 +13,12 @@ class CatalogItemProperties extends React.Component {
             gPrice: PropTypes.number,
             imageURL: PropTypes.string,
             gRemains: PropTypes.number,
-        })
+        }),
+        cbSwitchLockMode: PropTypes.func.isRequired,
     }
 
-    fieldChanged = () => {
-
+    fieldChanged = (e) => {
+        this.props.cbSwitchLockMode();
     }
 
     resultHandler = () => {
@@ -25,7 +26,7 @@ class CatalogItemProperties extends React.Component {
     }
 
     cancelHandler = () => {
-
+        this.props.cbSwitchLockMode();
     }
 
     render() {

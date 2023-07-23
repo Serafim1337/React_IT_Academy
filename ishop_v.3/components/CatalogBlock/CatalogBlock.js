@@ -28,6 +28,7 @@ class CatalogBlock extends React.Component {
     itemPropertiesActive: false,
     itemPropertiesWorkMode: null,
     itemPropertiesData: null,
+    isItemLocked: false,
   };
 
   itemSelectHandler = (selectedItemId) => {
@@ -59,6 +60,19 @@ class CatalogBlock extends React.Component {
       itemPropertiesWorkMode: 'edit',
       itemPropertiesData: this.state.stateListOfGoods.filter((item) => item.gId == editItemId)[0],
     });
+  };
+
+  switchLockMode = () => {
+    this.setState((currState, props) => {
+      if (currState.isItemLocked) {
+        return {
+          isItemLocked: !currState.isItemLocked,
+          itemPropertiesActive: false,
+        }
+      } else {
+        return { isItemLocked: !currState.isItemLocked }
+      }
+    })
   }
 
   newItemHandler = () => {
@@ -66,9 +80,10 @@ class CatalogBlock extends React.Component {
       selectedItemId: null,
       itemPropertiesActive: true,
       itemPropertiesWorkMode: 'new',
-      itemPropertiesData: null
+      itemPropertiesData: null,
+      isItemLocked: true,
     });
-  }
+  };
 
   render() {
     const catalogCode = this.state.stateListOfGoods.map((item) =>
@@ -82,7 +97,8 @@ class CatalogBlock extends React.Component {
         cbItemSelectHandler={this.itemSelectHandler}
         selectedItemId={this.state.selectedItemId}
         cbDeleteItemHandler={this.deleteItemHandler}
-        cbEditItemHandler={this.editItemHandler} />
+        cbEditItemHandler={this.editItemHandler}
+        isItemLocked={this.state.isItemLocked} />
     );
 
     return (
@@ -111,7 +127,8 @@ class CatalogBlock extends React.Component {
           className="NewItemButton"
           type="button"
           value="New product"
-          onClick={this.newItemHandler}>
+          onClick={this.newItemHandler}
+          disabled={this.state.isItemLocked}>
         </input>
 
         {this.state.selectedItemId && !this.state.itemPropertiesActive &&
@@ -124,8 +141,10 @@ class CatalogBlock extends React.Component {
         }
 
         {this.state.itemPropertiesActive &&
-          <CatalogItemProperties workMode={this.state.itemPropertiesWorkMode} itemData={this.state.itemPropertiesData}>
-
+          <CatalogItemProperties
+            workMode={this.state.itemPropertiesWorkMode}
+            itemData={this.state.itemPropertiesData}
+            cbSwitchLockMode={this.switchLockMode}>
           </CatalogItemProperties>
         }
 

@@ -15,6 +15,7 @@ class CatalogItem extends React.Component {
     selectedItemId: PropTypes.string,
     cbDeleteItemHandler: PropTypes.func.isRequired,
     cbEditItemHandler: PropTypes.func.isRequired,
+    isItemLocked: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -22,6 +23,9 @@ class CatalogItem extends React.Component {
 
 
   itemSelectHandler = (e) => {
+    if (this.props.isItemLocked) {
+      return;
+    }
     this.props.cbItemSelectHandler(e.currentTarget.dataset.item_id);
   };
 
@@ -61,7 +65,8 @@ class CatalogItem extends React.Component {
             type="button"
             value="Edit"
             data-parent_item_id={this.props.gId}
-            onClick={this.editItemHandler}>
+            onClick={this.editItemHandler}
+            disabled={this.props.isItemLocked}>
           </input>
         </td>
         <td className="RowCell">
@@ -70,7 +75,8 @@ class CatalogItem extends React.Component {
             type="button"
             value="Delete"
             data-parent_item_id={this.props.gId}
-            onClick={this.deleteItemHandler}>
+            onClick={this.deleteItemHandler}
+            disabled={this.props.isItemLocked}>
           </input>
         </td>
       </tr >
