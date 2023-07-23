@@ -14,7 +14,12 @@ class CatalogItem extends React.Component {
     cbItemSelectHandler: PropTypes.func.isRequired,
     selectedItemId: PropTypes.string,
     cbDeleteItemHandler: PropTypes.func.isRequired,
+    cbEditItemHandler: PropTypes.func.isRequired,
   };
+
+  state = {
+  };
+
 
   itemSelectHandler = (e) => {
     this.props.cbItemSelectHandler(e.currentTarget.dataset.item_id);
@@ -24,6 +29,12 @@ class CatalogItem extends React.Component {
     e.stopPropagation();
     this.props.cbDeleteItemHandler(e.target.dataset.parent_item_id);
   };
+
+  editItemHandler = (e) => {
+    e.stopPropagation();
+    this.props.cbEditItemHandler(e.target.dataset.parent_item_id);
+    this.setState({ isEditClicked: true })
+  }
 
   render() {
 
@@ -46,10 +57,11 @@ class CatalogItem extends React.Component {
         <td className="RowCell">{this.props.gRemains}</td>
         <td className="RowCell">
           <input
-            className="DeleteButton"
+            className="EditButton"
             type="button"
             value="Edit"
-          >
+            data-parent_item_id={this.props.gId}
+            onClick={this.editItemHandler}>
           </input>
         </td>
         <td className="RowCell">

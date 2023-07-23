@@ -25,10 +25,16 @@ class CatalogBlock extends React.Component {
   state = {
     selectedItemId: null,
     stateListOfGoods: this.props.listOfGoods,
+    itemPropertiesActive: false,
+    itemPropertiesWorkMode: null,
+    itemPropertiesData: null,
   };
 
   itemSelectHandler = (selectedItemId) => {
-    this.setState({ selectedItemId });
+    this.setState({
+      selectedItemId,
+      itemPropertiesActive: false,
+    });
   };
 
   deleteItemHandler = (deleteItemId) => {
@@ -36,6 +42,7 @@ class CatalogBlock extends React.Component {
       this.setState((currState, props) => {
         if (currState.selectedItemId == deleteItemId) {
           currState.selectedItemId = null;
+          currState.itemPropertiesActive = false;
         }
         return {
           stateListOfGoods:
@@ -44,6 +51,24 @@ class CatalogBlock extends React.Component {
         };
       }) : null;
   };
+
+  editItemHandler = (editItemId) => {
+    this.setState({
+      selectedItemId: editItemId,
+      itemPropertiesActive: true,
+      itemPropertiesWorkMode: 'edit',
+      itemPropertiesData: this.state.stateListOfGoods.filter((item) => item.gId == editItemId)[0],
+    });
+  }
+
+  newItemHandler = () => {
+    this.setState({
+      selectedItemId: null,
+      itemPropertiesActive: true,
+      itemPropertiesWorkMode: 'new',
+      itemPropertiesData: null
+    });
+  }
 
   render() {
     const catalogCode = this.state.stateListOfGoods.map((item) =>
@@ -56,7 +81,8 @@ class CatalogBlock extends React.Component {
         gRemains={item.gRemains}
         cbItemSelectHandler={this.itemSelectHandler}
         selectedItemId={this.state.selectedItemId}
-        cbDeleteItemHandler={this.deleteItemHandler} />
+        cbDeleteItemHandler={this.deleteItemHandler}
+        cbEditItemHandler={this.editItemHandler} />
     );
 
     return (
@@ -85,17 +111,22 @@ class CatalogBlock extends React.Component {
           className="NewItemButton"
           type="button"
           value="New product"
-          data-parent_item_id={this.props.gId}
-          onClick={this.deleteItemHandler}>
+          onClick={this.newItemHandler}>
         </input>
 
-        {this.state.selectedItemId &&
+        {this.state.selectedItemId && !this.state.itemPropertiesActive &&
           <CatalogItemShowcase
             itemData={
               this.state.stateListOfGoods.filter(
                 (item) => item.gId == this.state.selectedItemId)[0]
             }
           ></CatalogItemShowcase>
+        }
+
+        {this.state.itemPropertiesActive &&
+          <CatalogItemProperties workMode={this.state.itemPropertiesWorkMode} itemData={this.state.itemPropertiesData}>
+
+          </CatalogItemProperties>
         }
 
       </Fragment>

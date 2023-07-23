@@ -1,0 +1,14 @@
+.CatalogItemProperties {
+}
+
+.CatalogItemProperties .PropertiesForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.CatalogItemProperties .PropertiesControls {
+  display: flex;
+  margin-top: 10px;
+  gap: 10px;
+}
