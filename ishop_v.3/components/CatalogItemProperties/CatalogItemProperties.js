@@ -14,19 +14,42 @@ class CatalogItemProperties extends React.Component {
             imageURL: PropTypes.string,
             gRemains: PropTypes.number,
         }),
-        cbSwitchLockMode: PropTypes.func.isRequired,
+        cbLockModeOn: PropTypes.func.isRequired,
+        cbLockModeOff: PropTypes.func.isRequired,
+        cbGetEditedItem: PropTypes.func.isRequired,
     }
+
+    state = {
+        currentItem: Object.assign({}, this.props.itemData),
+    }
+
+
 
     fieldChanged = (e) => {
-        this.props.cbSwitchLockMode();
+        this.props.cbLockModeOn();
+        let newItem = this.state.currentItem;
+        newItem[e.target.name] = e.target.value;
+        this.setState({ currentItem: newItem })
+        // TODO number types parse
     }
 
-    resultHandler = () => {
+    // TODO validation
 
+    resultHandler = () => {
+        switch (this.props.workMode) {
+            case 'edit':
+                this.props.cbGetEditedItem(this.state.currentItem);
+                this.props.cbLockModeOff();
+                break;
+            case 'new':
+                // TODO new item add
+                break;
+        }
     }
 
     cancelHandler = () => {
-        this.props.cbSwitchLockMode();
+        console.log('cancel');
+        this.props.cbLockModeOff();
     }
 
     render() {
@@ -42,23 +65,27 @@ class CatalogItemProperties extends React.Component {
                 </h2>
                 <form className='PropertiesForm'>
                     <input type='text'
-                        value={this.props.itemData ? this.props.itemData.gName : ""}
+                        value={this.props.itemData ? this.state.currentItem.gName : ""}
                         onChange={this.fieldChanged}
+                        name='gName'
                         placeholder='Name'>
                     </input>
                     <input type='text'
-                        value={this.props.itemData ? this.props.itemData.gPrice : ""}
+                        value={this.props.itemData ? this.state.currentItem.gPrice : ""}
                         onChange={this.fieldChanged}
+                        name='gPrice'
                         placeholder='Price'>
                     </input>
                     <input type='text'
-                        value={this.props.itemData ? this.props.itemData.imageURL : ""}
+                        value={this.props.itemData ? this.state.currentItem.imageURL : ""}
                         onChange={this.fieldChanged}
+                        name='imageURL'
                         placeholder='Image URL'>
                     </input>
                     <input type='text'
-                        value={this.props.itemData ? this.props.itemData.gRemains : ""}
+                        value={this.props.itemData ? this.state.currentItem.gRemains : ""}
                         onChange={this.fieldChanged}
+                        name='gRemains'
                         placeholder='Remain Quantity'>
                     </input>
                 </form>
@@ -72,7 +99,7 @@ class CatalogItemProperties extends React.Component {
                         onClick={this.cancelHandler}>
                     </input>
                 </div>
-            </div>
+            </div >
 
         );
     }

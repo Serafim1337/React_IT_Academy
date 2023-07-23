@@ -62,17 +62,30 @@ class CatalogBlock extends React.Component {
     });
   };
 
-  switchLockMode = () => {
+  getEditedItem = (editedItem) => {
     this.setState((currState, props) => {
-      if (currState.isItemLocked) {
-        return {
-          isItemLocked: !currState.isItemLocked,
-          itemPropertiesActive: false,
-        }
-      } else {
-        return { isItemLocked: !currState.isItemLocked }
+      return {
+        stateListOfGoods: currState.stateListOfGoods.map((item) => {
+          if (item.gId == editedItem.gId) {
+            item = editedItem;
+          }
+          return item;
+        })
       }
     })
+  }
+
+  lockModeOn = () => {
+    this.setState({
+      isItemLocked: true
+    })
+  }
+
+  lockModeOff = () => {
+    this.setState({
+      isItemLocked: false,
+      itemPropertiesActive: false,
+    });
   }
 
   newItemHandler = () => {
@@ -144,7 +157,9 @@ class CatalogBlock extends React.Component {
           <CatalogItemProperties
             workMode={this.state.itemPropertiesWorkMode}
             itemData={this.state.itemPropertiesData}
-            cbSwitchLockMode={this.switchLockMode}>
+            cbLockModeOn={this.lockModeOn}
+            cbLockModeOff={this.lockModeOff}
+            cbGetEditedItem={this.getEditedItem}>
           </CatalogItemProperties>
         }
 
