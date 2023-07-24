@@ -8,6 +8,11 @@
   gap: 10px;
 }
 
+.CatalogItemProperties .PropertiesForm .FieldBlock {
+  display: flex;
+  flex-direction: column;
+}
+
 .CatalogItemProperties .PropertiesControls {
   display: flex;
   margin-top: 10px;
