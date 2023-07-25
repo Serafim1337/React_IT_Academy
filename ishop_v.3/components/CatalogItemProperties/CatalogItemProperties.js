@@ -17,6 +17,7 @@ class CatalogItemProperties extends React.Component {
         cbLockModeOn: PropTypes.func.isRequired,
         cbLockModeOff: PropTypes.func.isRequired,
         cbGetEditedItem: PropTypes.func.isRequired,
+        cbGetNewItem: PropTypes.func.isRequired,
     }
 
     state = {
@@ -28,17 +29,59 @@ class CatalogItemProperties extends React.Component {
         gRemainsFieldValidStatus: true,
     }
 
-    componentDidUpdate = (oldProps, oldState) => {
-        if (oldState.currentItem.gId != this.props.itemData.gId) {
-            this.setState({ currentItem: Object.assign({}, this.props.itemData) })
+    componentDidMount = () => {
+        if (this.props.workMode == 'new') {
+            this.setState({
+                saveDisabled: true,
+                gNameFieldValidStatus: false,
+                gPriceFieldValidStatus: false,
+                imageURLFieldValidStatus: false,
+                gRemainsFieldValidStatus: false,
+            })
         }
     }
 
+    componentDidUpdate = (oldProps, oldState) => {
+        switch (this.props.workMode) {
+            case 'edit':
+                if (oldState.currentItem.gId != this.props.itemData.gId) {
+                    this.setState({
+                        currentItem: Object.assign({}, this.props.itemData),
+
+                    })
+                }
+                break;
+            case 'new':
+                if (oldState.currentItem.gId != this.props.itemData.gId) {
+                    this.setState({
+                        currentItem: Object.assign({}, this.props.itemData),
+                        saveDisabled: true,
+                        gNameFieldValidStatus: false,
+                        gPriceFieldValidStatus: false,
+                        imageURLFieldValidStatus: false,
+                        gRemainsFieldValidStatus: false,
+                    })
+                }
+                break;
+        }
+
+    }
+
     fieldChanged = (e) => {
-        this.props.cbLockModeOn();
-        let newItem = this.state.currentItem;
-        newItem[e.target.name] = e.target.value;
-        this.setState({ currentItem: newItem, saveDisabled: true })
+        switch (this.props.workMode) {
+            case 'edit':
+                this.props.cbLockModeOn();
+                let editItem = this.state.currentItem;
+                editItem[e.target.name] = e.target.value;
+                this.setState({ currentItem: editItem, saveDisabled: true })
+                break;
+            case 'new':
+                this.props.cbLockModeOn();
+                let newItem = this.state.currentItem;
+                newItem[e.target.name] = e.target.value;
+                this.setState({ currentItem: newItem, saveDisabled: true })
+                break;
+        }
     }
 
     fieldBlur = (e) => {
@@ -84,7 +127,7 @@ class CatalogItemProperties extends React.Component {
 
     gPriceValidator(fieldValue) {
         let regExp = /((^\d+$)|(^\d+\.?\d+$))/;
-        return regExp.test(fieldValue);
+        return regExp.test(fieldValue) && parseFloat(fieldValue) > 0;
     }
 
     imageURLValidator(fieldValue) {
@@ -94,10 +137,10 @@ class CatalogItemProperties extends React.Component {
 
     gRemainsValidator(fieldValue) {
         let regExp = /(^\d+$)/;
-        return regExp.test(fieldValue);
+        return regExp.test(fieldValue) && parseInt(fieldValue) > 0;
     }
 
-    isSaveAvailable = () => {
+    isSaveAvailable() {
         if (this.state.gNameFieldValidStatus &&
             this.state.gPriceFieldValidStatus &&
             this.state.imageURLFieldValidStatus &&
@@ -107,18 +150,19 @@ class CatalogItemProperties extends React.Component {
     }
 
     resultHandler = () => {
+        // number type validation before save
+        let item = this.state.currentItem;
+        item.gPrice = parseFloat(item.gPrice);
+        item.gRemains = parseInt(item.gRemains);
+
         switch (this.props.workMode) {
             case 'edit':
-                // number type validation before save
-                let item = this.state.currentItem;
-                item.gPrice = parseFloat(item.gPrice);
-                item.gRemains = parseInt(item.gRemains);
-
                 this.props.cbGetEditedItem(item);
                 this.props.cbLockModeOff();
                 break;
             case 'new':
-                // TODO new item add
+                this.props.cbGetNewItem(item);
+                this.props.cbLockModeOff();
                 break;
         }
     }
@@ -141,7 +185,7 @@ class CatalogItemProperties extends React.Component {
                 <form className='PropertiesForm'>
                     <label className='FieldBlock'>
                         <input type='text'
-                            value={this.props.itemData ? this.state.currentItem.gName : ""}
+                            value={this.state.currentItem.gName}
                             onChange={this.fieldChanged}
                             name='gName'
                             placeholder='Name'
@@ -153,19 +197,19 @@ class CatalogItemProperties extends React.Component {
                     </label>
                     <label>
                         <input type='text'
-                            value={this.props.itemData ? this.state.currentItem.gPrice : ""}
+                            value={this.state.currentItem.gPrice}
                             onChange={this.fieldChanged}
                             name='gPrice'
                             placeholder='Price'
                             onBlur={this.fieldBlur}>
                         </input>
                         {this.state.gPriceFieldValidStatus ||
-                            <div style={{ color: 'red' }}>Поле должно быть числом, возможно дробным через точку</div>
+                            <div style={{ color: 'red' }}>Поле должно быть положительным числом, возможно дробным через точку</div>
                         }
                     </label>
                     <label>
                         <input type='text'
-                            value={this.props.itemData ? this.state.currentItem.imageURL : ""}
+                            value={this.state.currentItem.imageURL}
                             onChange={this.fieldChanged}
                             name='imageURL'
                             placeholder='Image URL'
@@ -177,14 +221,14 @@ class CatalogItemProperties extends React.Component {
                     </label>
                     <label>
                         <input type='text'
-                            value={this.props.itemData ? this.state.currentItem.gRemains : ""}
+                            value={this.state.currentItem.gRemains}
                             onChange={this.fieldChanged}
                             name='gRemains'
                             placeholder='Remain Quantity'
                             onBlur={this.fieldBlur}>
                         </input>
                         {this.state.gRemainsFieldValidStatus ||
-                            <div style={{ color: 'red' }}>Поле должно быть целым числом</div>
+                            <div style={{ color: 'red' }}>Поле должно быть положительным целым числом</div>
                         }
                     </label>
                 </form>

@@ -75,6 +75,16 @@ class CatalogBlock extends React.Component {
     })
   }
 
+  getNewItem = (newItem) => {
+    this.setState((currState, props) => {
+      let newListOfGoods = currState.stateListOfGoods;
+      newListOfGoods.push(newItem);
+      return {
+        stateListOfGoods: newListOfGoods
+      }
+    })
+  }
+
   lockModeOn = () => {
     this.setState({
       isItemLocked: true
@@ -93,7 +103,14 @@ class CatalogBlock extends React.Component {
       selectedItemId: null,
       itemPropertiesActive: true,
       itemPropertiesWorkMode: 'new',
-      itemPropertiesData: null,
+      itemPropertiesData: {
+        gId: this.state.stateListOfGoods[
+          this.state.stateListOfGoods.length - 1].gId + 100,
+        gName: '',
+        gPrice: 0,
+        imageURL: '',
+        gRemains: 0,
+      },
       isItemLocked: true,
     });
   };
@@ -159,7 +176,8 @@ class CatalogBlock extends React.Component {
             itemData={this.state.itemPropertiesData}
             cbLockModeOn={this.lockModeOn}
             cbLockModeOff={this.lockModeOff}
-            cbGetEditedItem={this.getEditedItem}>
+            cbGetEditedItem={this.getEditedItem}
+            cbGetNewItem={this.getNewItem}>
           </CatalogItemProperties>
         }
 
