@@ -1,0 +1,78 @@
+.CatalogBlock {
+  border-spacing: 0;
+}
+
+.CatalogBlock .CatalogHeader {
+  background-color: rgb(214, 214, 214);
+}
+
+.CatalogBlock .CatalogHeader .HeaderTitle {
+  text-align: center;
+}
+.CatalogItem {
+  line-height: 200px;
+}
+
+.CatalogItem:hover {
+  cursor: pointer;
+}
+
+.CatalogItem .RowCell {
+  border: 1px solid;
+  text-align: center;
+  min-width: 80px;
+}
+
+.CatalogItem .RowCell img {
+  display: block;
+  width: 100px;
+}
+
+.CatalogItem .DeleteButton {
+  cursor: pointer;
+}
+.CatalogItemShowcase {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  border: 1px solid black;
+  padding: 5px;
+  height: 90px;
+}
+
+.CatalogItemShowcase .itemInfo img {
+  width: 50px;
+}
+.CatalogItemProperties {
+  width: 50%;
+}
+
+.CatalogItemProperties .PropertiesForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.CatalogItemProperties .PropertiesForm .FieldBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.CatalogItemProperties .PropertiesControls {
+  display: flex;
+  margin-top: 10px;
+  gap: 10px;
+}
+#container {
+  margin: 0 auto;
+  width: fit-content;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#container .NewItemButton {
+  margin-top: 20px;
+}
+
+/*# sourceMappingURL=bundle.css.map*/
