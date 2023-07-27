@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './RainbowFrame.css';
 
 function RainbowFrame(props) {
-    return createBlocks([...props.colorsList], props.children);
+    return createBlocks(props.colorsList.slice(), props.children);
 }
 
 RainbowFrame.propTypes = {
