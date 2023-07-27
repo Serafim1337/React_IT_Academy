@@ -30539,8 +30539,10 @@ __webpack_require__(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function RainbowFrame(props) {
-    return createBlocks(props.colorsList, props.children);
+    return createBlocks([].concat(_toConsumableArray(props.colorsList)), props.children);
 }
 
 RainbowFrame.propTypes = {
