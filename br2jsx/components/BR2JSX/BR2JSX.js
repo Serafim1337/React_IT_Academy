@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './BR2JSX.css';
 
 function BR2JSX(props) {
-    let codeStr = props.text.slice(0, props.text.length);
+    let codeStr = props.text;
 
     codeStr = codeStr
         .replace(/<br\/>/, ' <br/> ')
