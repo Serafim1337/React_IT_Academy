@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import './style.css';
 
 import DoubleButton from "./components/DoubleButton/DoubleButton";
-import withRainbowFrame from './withRainbowFrame'
+import withRainbowFrame from './components/withRainbowFrame'
 
 let colors = ['red', 'orange', 'yellow', 'green', '#00BFFF', 'blue', 'purple'];
 
