@@ -15,7 +15,7 @@ function BR2JSX(props) {
 
     codeStr.split('<br/>').forEach((item, index) => {
         if (index) {
-            jsxArray.push(<br />, item);
+            jsxArray.push(<br key={index} />, item);
         } else {
             jsxArray.push(item);
         }
