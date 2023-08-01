@@ -7,11 +7,19 @@ function BR2JSX(props) {
     let codeStr = props.text;
 
     codeStr = codeStr
-        .replace(/<br\/>/, '*<br/>*')
-        .replace(/<br\s\/>/, '*<br/>*')
-        .replace(/<br>/, '*<br/>*');
+        .replace(/<br\/>/, '<br/>')
+        .replace(/<br\s\/>/, '<br/>')
+        .replace(/<br>/, '<br/>');
 
-    let jsxArray = codeStr.split('*').map(item => item == '<br/>' ? <br /> : item);
+    let jsxArray = [];
+
+    codeStr.split('<br/>').forEach((item, index) => {
+        if (index) {
+            jsxArray.push(<br />, item);
+        } else {
+            jsxArray.push(item);
+        }
+    })
 
     return (
         <div style={{ backgroundColor: "green", padding: '10px' }}>

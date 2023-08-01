@@ -30538,10 +30538,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function BR2JSX(props) {
     var codeStr = props.text;
 
-    codeStr = codeStr.replace(/<br\/>/, '*<br/>*').replace(/<br\s\/>/, '*<br/>*').replace(/<br>/, '*<br/>*');
+    codeStr = codeStr.replace(/<br\/>/, '<br/>').replace(/<br\s\/>/, '<br/>').replace(/<br>/, '<br/>');
 
-    var jsxArray = codeStr.split('*').map(function (item) {
-        return item == '<br/>' ? _react2.default.createElement('br', null) : item;
+    var jsxArray = [];
+
+    codeStr.split('<br/>').forEach(function (item, index) {
+        if (index) {
+            jsxArray.push(_react2.default.createElement('br', null), item);
+        } else {
+            jsxArray.push(item);
+        }
     });
 
     return _react2.default.createElement(
