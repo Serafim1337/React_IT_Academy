@@ -30670,7 +30670,7 @@ var MobileBlock = function (_React$PureComponent) {
                     break;
                 case 1:
                     var clientsSortedByActive = this.state.stateClientsList.filter(function (client) {
-                        return client.balance > 0;
+                        return client.balance >= 0;
                     });
                     clientsComponents = clientsSortedByActive.map(function (client) {
                         return _react2.default.createElement(_MobileClient2.default, { clientInfo: client, key: client.id });

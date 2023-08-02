@@ -90,7 +90,7 @@ class MobileBlock extends React.PureComponent {
                     client => <MobileClient clientInfo={client} key={client.id}></MobileClient>);
                 break;
             case 1:
-                const clientsSortedByActive = this.state.stateClientsList.filter(client => client.balance > 0)
+                const clientsSortedByActive = this.state.stateClientsList.filter(client => client.balance >= 0)
                 clientsComponents = clientsSortedByActive.map(
                     client => <MobileClient clientInfo={client} key={client.id}></MobileClient>);
                 break;
