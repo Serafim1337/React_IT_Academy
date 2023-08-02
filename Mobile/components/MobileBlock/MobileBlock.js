@@ -22,7 +22,8 @@ class MobileBlock extends React.PureComponent {
     }
 
     state = {
-        stateClientsList: this.props.clientsList
+        stateClientsList: this.props.clientsList,
+        sortMode: 0, // 0 - all, 1 - sorted by active, 2 - sorted by blocked
     }
 
     componentDidMount() {
@@ -52,17 +53,46 @@ class MobileBlock extends React.PureComponent {
         this.setState({ stateClientsList: newClients })
     }
 
+    sortByActive = () => {
+        this.setState({ sortMode: 1 })
+    }
+
+    sortByBlocked = () => {
+        this.setState({ sortMode: 2 })
+    }
+
+    sortCancel = () => {
+        this.setState({ sortMode: 0 })
+    }
+
     render() {
-        let clientsComponents = this.state.stateClientsList.map((client) =>
-            <MobileClient clientInfo={client} key={client.id}></MobileClient>)
+
+        let clientsComponents;
+
+        switch (this.state.sortMode) {
+            case 0:
+                clientsComponents = this.state.stateClientsList.map(
+                    client => <MobileClient clientInfo={client} key={client.id}></MobileClient>);
+                break;
+            case 1:
+                const clientsSortedByActive = this.state.stateClientsList.filter(client => client.balance > 0)
+                clientsComponents = clientsSortedByActive.map(
+                    client => <MobileClient clientInfo={client} key={client.id}></MobileClient>);
+                break;
+            case 2:
+                const clientsSortedByBlocked = this.state.stateClientsList.filter(client => client.balance < 0)
+                clientsComponents = clientsSortedByBlocked.map(
+                    client => <MobileClient clientInfo={client} key={client.id}></MobileClient>);
+                break;
+        }
 
         console.log('MobileBlock render');
 
         return (
             <div className="MobileBlock">
-                <button type="button" className="btn btn-secondary">Все</button>
-                <button type="button" className="btn btn-secondary">Активные</button>
-                <button type="button" className="btn btn-secondary">Заблокированные</button>
+                <button type="button" className="btn btn-secondary" onClick={this.sortCancel}>Все</button>
+                <button type="button" className="btn btn-secondary" onClick={this.sortByActive}>Активные</button>
+                <button type="button" className="btn btn-secondary" onClick={this.sortByBlocked}>Заблокированные</button>
                 <table className="table">
                     <thead className="thead-dark">
                         <tr>
