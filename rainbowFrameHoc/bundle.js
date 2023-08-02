@@ -31644,26 +31644,43 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var withRainbowFrame = function withRainbowFrame(colors) {
     return function (Comp) {
         return function (props) {
-            return createBlocks(colors, Comp, props);
+            var jsxResult = _react2.default.createElement(Comp, props);
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = colors[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var color = _step.value;
+
+                    jsxResult = _react2.default.createElement(
+                        'div',
+                        { style: {
+                                border: '10px ' + color + ' solid',
+                                padding: '10px'
+                            } },
+                        jsxResult
+                    );
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return jsxResult;
         };
     };
 };
-
-function createBlocks(arr, Comp, props) {
-    var currentBlock = arr.shift();
-    if (currentBlock) {
-        return _react2.default.createElement(
-            'div',
-            { style: {
-                    border: '10px ' + currentBlock + ' solid',
-                    padding: '10px'
-                } },
-            createBlocks(arr, Comp, props)
-        );
-    } else {
-        return _react2.default.createElement(Comp, props);
-    }
-}
 
 exports.default = withRainbowFrame;
 

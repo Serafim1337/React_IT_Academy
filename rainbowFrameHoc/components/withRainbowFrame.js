@@ -1,21 +1,17 @@
 import React from "react";
 
 const withRainbowFrame = colors => Comp => props => {
-    return createBlocks(colors, Comp, props);
-}
-
-function createBlocks(arr, Comp, props) {
-    let currentBlock = arr.shift();
-    if (currentBlock) {
-        return <div style={{
-            border: '10px ' + currentBlock + ' solid',
+    let jsxResult = <Comp {...props}></Comp >;
+    for (let color of colors) {
+        jsxResult = <div style={{
+            border: '10px ' + color + ' solid',
             padding: '10px'
         }}>
-            {createBlocks(arr, Comp, props)}
+            {jsxResult}
         </div>
-    } else {
-        return <Comp {...props}></Comp>;
     }
+
+    return jsxResult;
 }
 
 export default withRainbowFrame;
