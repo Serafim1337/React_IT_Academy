@@ -53,6 +53,21 @@ class MobileBlock extends React.PureComponent {
         this.setState({ stateClientsList: newClients })
     }
 
+    addClientHandler = () => {
+        const newClients = [...this.state.stateClientsList];
+        const newClientId = newClients.slice(-1)[0] ?
+            newClients.slice(-1)[0].id + 1 :
+            100; //if no clients exist, new client will have id 100, else last client id + 1 
+        newClients.push({
+            id: newClientId,
+            firstName: null,
+            secondName: null,
+            surname: null,
+            balance: 0,
+        })
+        this.setState({ stateClientsList: newClients })
+    }
+
     sortByActive = () => {
         this.setState({ sortMode: 1 })
     }
@@ -110,7 +125,7 @@ class MobileBlock extends React.PureComponent {
                         {clientsComponents}
                     </tbody>
                 </table>
-                <button type="button" className="btn btn-primary">Добавить клиента</button>
+                <button type="button" className="btn btn-primary" onClick={this.addClientHandler}>Добавить клиента</button>
             </div>
         );
     }

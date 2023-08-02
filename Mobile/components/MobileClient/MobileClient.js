@@ -8,17 +8,17 @@ import mobileEvents from "../eventFlow";
 class MobileClient extends React.PureComponent {
     static propTypes = {
         clientInfo: PropTypes.shape({
-            id: PropTypes.number.isRequired,
-            firstName: PropTypes.string.isRequired,
-            secondName: PropTypes.string.isRequired,
-            surname: PropTypes.string.isRequired,
-            balance: PropTypes.number.isRequired,
+            id: PropTypes.number,
+            firstName: PropTypes.string,
+            secondName: PropTypes.string,
+            surname: PropTypes.string,
+            balance: PropTypes.number,
         })
     }
 
     state = {
         stateClientInfo: this.props.clientInfo,
-        isEditMode: false,
+        isEditMode: this.props.clientInfo.firstName == null ? true : false,
         isBlocked: this.props.clientInfo.balance < 0,
     }
 
@@ -92,7 +92,7 @@ class MobileClient extends React.PureComponent {
                 <td>
                     {this.state.isEditMode ?
                         <input
-                            type="text"
+                            type="number"
                             defaultValue={this.state.stateClientInfo.balance}
                             ref={this.balanceRef}>
                         </input> :
