@@ -27,16 +27,29 @@ class MobileBlock extends React.PureComponent {
 
     componentDidMount() {
         mobileEvents.addListener('clientDelete', this.deleteHandler);
+        mobileEvents.addListener('clientSave', this.saveHandler);
     }
 
     deleteHandler = (clientId) => {
-        let clients = [...this.state.stateClientsList];
-        for (let i = 0; i < clients.length; i++) {
-            if (clients[i].id == clientId) {
-                clients.splice(i, 1);
+        let newClients = [...this.state.stateClientsList];
+        for (let i = 0; i < newClients.length; i++) {
+            if (newClients[i].id == clientId) {
+                newClients.splice(i, 1);
             }
         }
-        this.setState({ stateClientsList: clients })
+        this.setState({ stateClientsList: newClients })
+    }
+
+    saveHandler = (editedClientInfo) => {
+        let newClients = [...this.state.stateClientsList];
+        for (let i = 0; i < newClients.length; i++) {
+            if (newClients[i].id == editedClientInfo.id) {
+                let newClientItem = { ...newClients[i] };
+                newClientItem = { ...editedClientInfo };
+                newClients[i] = newClientItem;
+            }
+        }
+        this.setState({ stateClientsList: newClients })
     }
 
     render() {
