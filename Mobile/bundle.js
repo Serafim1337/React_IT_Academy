@@ -30657,6 +30657,12 @@ var MobileBlock = function (_React$PureComponent) {
             _eventFlow2.default.addListener('clientSave', this.saveHandler);
         }
     }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            _eventFlow2.default.removeListener('clientDelete', this.deleteHandler);
+            _eventFlow2.default.removeListener('clientSave', this.saveHandler);
+        }
+    }, {
         key: "render",
         value: function render() {
 
