@@ -1,0 +1,11 @@
+.FilterControls {
+  width: 100%;
+  display: flex !important;
+  gap: 30px;
+  align-items: center;
+}
+
+.FilterControls .sort-checkbox {
+  margin-bottom: 3px;
+  transform: scale(1.5);
+}
