@@ -1,0 +1,39 @@
+{
+  "clientsList": [
+    {
+      "id": 101,
+      "firstName": "Иван",
+      "secondName": "Иванович",
+      "surname": "Иванов",
+      "balance": 100
+    },
+    {
+      "id": 102,
+      "firstName": "Петр",
+      "secondName": "Петрович",
+      "surname": "Петров",
+      "balance": 250
+    },
+    {
+      "id": 103,
+      "firstName": "Павел",
+      "secondName": "Павлович",
+      "surname": "Павлов",
+      "balance": 300
+    },
+    {
+      "id": 104,
+      "firstName": "Сергей",
+      "secondName": "Сергеевич",
+      "surname": "Сергеев",
+      "balance": -450
+    },
+    {
+      "id": 105,
+      "firstName": "Максим",
+      "secondName": "Максимович",
+      "surname": "Максимов",
+      "balance": 600
+    }
+  ]
+}
