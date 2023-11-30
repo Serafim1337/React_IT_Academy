@@ -13,6 +13,7 @@ import dataList from "./dataList.json";
 
 ReactDOM.render(
   <BrowserRouter>
+    {/* <MobileControls></MobileControls> */}
     <Routes>
       <Route path="/" element={<MobilePage></MobilePage>}>
         <Route
@@ -27,6 +28,7 @@ ReactDOM.render(
             <MobileBlock clientsList={dataList.clientsList}></MobileBlock>
           }
         ></Route>
+
         <Route
           path="blocked"
           element={

@@ -11,7 +11,7 @@ const MobileControls = () => {
         type="button"
         className="btn btn-secondary"
         onClick={() => {
-          navigation("/");
+          navigation("/", { replace: false });
         }}
       >
         Все
@@ -20,7 +20,7 @@ const MobileControls = () => {
         type="button"
         className="btn btn-secondary"
         onClick={() => {
-          navigation("active");
+          navigation("/active", { replace: false });
         }}
       >
         Активные
@@ -29,7 +29,7 @@ const MobileControls = () => {
         type="button"
         className="btn btn-secondary"
         onClick={() => {
-          navigation("blocked");
+          navigation("/blocked", { replace: false });
         }}
       >
         Заблокированные
