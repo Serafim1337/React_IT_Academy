@@ -20,31 +20,15 @@ const MobileBlock = ({ clientsList }) => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(
-      "CURRENT STATE DID MOUNT: " +
-        stateClientsList.map((item) => item.id).join(" ")
-    );
-    return () => {
-      console.log(
-        "CURRENT STATE BEFORE UNMOUNT: " +
-          stateClientsList.map((item) => item.id).join(" ")
-      );
-    };
-  });
-
   const deleteHandler = (clientId) => {
     let newClients = [...stateClientsList];
-    console.log(
-      "got from state " + newClients.map((item) => item.id).join(" ")
-    );
+
     for (let i = 0; i < newClients.length; i++) {
       if (newClients[i].id == clientId) {
-        console.log("find to delete " + newClients[i].id);
         newClients.splice(i, 1);
       }
     }
-    console.log("send to state " + newClients.map((item) => item.id).join(" "));
+
     setStateClientsList(newClients);
   };
 
