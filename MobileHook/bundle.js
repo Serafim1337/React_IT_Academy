@@ -491,8 +491,7 @@ var _dataList2 = _interopRequireDefault(_dataList);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_reactDom2.default.render(_react2.default.createElement(_MobileBlock2.default, {
-  clientsList: _dataList2.default.clientsList }), document.querySelector('#container'));
+_reactDom2.default.render(_react2.default.createElement(_MobileBlock2.default, { clientsList: _dataList2.default.clientsList }), document.querySelector("#container"));
 
 /***/ }),
 /* 10 */
@@ -30560,12 +30559,12 @@ exports.unstable_wrap = unstable_wrap;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _react = __webpack_require__(1);
 
@@ -30589,208 +30588,211 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var MobileBlock = function MobileBlock(_ref) {
+  var clientsList = _ref.clientsList;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+  var _useState = (0, _react.useState)(clientsList),
+      _useState2 = _slicedToArray(_useState, 2),
+      stateClientsList = _useState2[0],
+      setStateClientsList = _useState2[1];
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+  var _useState3 = (0, _react.useState)(0),
+      _useState4 = _slicedToArray(_useState3, 2),
+      sortMode = _useState4[0],
+      setSortMode = _useState4[1]; // 0 - all, 1 - sorted by active, 2 - sorted by blocked
 
-var MobileBlock = function (_React$PureComponent) {
-    _inherits(MobileBlock, _React$PureComponent);
+  (0, _react.useEffect)(function () {
+    _eventFlow2.default.addListener("clientDelete", deleteHandler);
+    _eventFlow2.default.addListener("clientSave", saveHandler);
+    return function () {
+      _eventFlow2.default.removeListener("clientDelete", deleteHandler);
+      _eventFlow2.default.removeListener("clientSave", saveHandler);
+    };
+  }, []);
 
-    function MobileBlock() {
-        var _ref;
+  var deleteHandler = function deleteHandler(clientId) {
+    var newClients = [].concat(_toConsumableArray(stateClientsList));
 
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, MobileBlock);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MobileBlock.__proto__ || Object.getPrototypeOf(MobileBlock)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-            stateClientsList: _this.props.clientsList,
-            sortMode: 0 // 0 - all, 1 - sorted by active, 2 - sorted by blocked
-        }, _this.deleteHandler = function (clientId) {
-            var newClients = [].concat(_toConsumableArray(_this.state.stateClientsList));
-            for (var i = 0; i < newClients.length; i++) {
-                if (newClients[i].id == clientId) {
-                    newClients.splice(i, 1);
-                }
-            }
-            _this.setState({ stateClientsList: newClients });
-        }, _this.saveHandler = function (editedClientInfo) {
-            var newClients = [].concat(_toConsumableArray(_this.state.stateClientsList));
-            for (var i = 0; i < newClients.length; i++) {
-                if (newClients[i].id == editedClientInfo.id) {
-                    var newClientItem = _extends({}, newClients[i]);
-                    newClientItem = _extends({}, editedClientInfo);
-                    newClients[i] = newClientItem;
-                }
-            }
-            _this.setState({ stateClientsList: newClients });
-        }, _this.addClientHandler = function () {
-            var newClients = [].concat(_toConsumableArray(_this.state.stateClientsList));
-            var newClientId = newClients.slice(-1)[0] ? newClients.slice(-1)[0].id + 1 : 100; //if no clients exist, new client will have id 100, else last client id + 1 
-            newClients.push({
-                id: newClientId,
-                firstName: null,
-                secondName: null,
-                surname: null,
-                balance: 0
-            });
-            _this.setState({ stateClientsList: newClients });
-        }, _this.sortByActive = function () {
-            _this.setState({ sortMode: 1 });
-        }, _this.sortByBlocked = function () {
-            _this.setState({ sortMode: 2 });
-        }, _this.sortCancel = function () {
-            _this.setState({ sortMode: 0 });
-        }, _temp), _possibleConstructorReturn(_this, _ret);
+    for (var i = 0; i < newClients.length; i++) {
+      if (newClients[i].id == clientId) {
+        newClients.splice(i, 1);
+      }
     }
 
-    _createClass(MobileBlock, [{
-        key: "componentDidMount",
-        value: function componentDidMount() {
-            _eventFlow2.default.addListener('clientDelete', this.deleteHandler);
-            _eventFlow2.default.addListener('clientSave', this.saveHandler);
-        }
-    }, {
-        key: "componentWillUnmount",
-        value: function componentWillUnmount() {
-            _eventFlow2.default.removeListener('clientDelete', this.deleteHandler);
-            _eventFlow2.default.removeListener('clientSave', this.saveHandler);
-        }
-    }, {
-        key: "render",
-        value: function render() {
+    setStateClientsList(newClients);
+  };
 
-            var clientsComponents = void 0;
+  var saveHandler = function saveHandler(editedClientInfo) {
+    var newClients = [].concat(_toConsumableArray(stateClientsList));
+    for (var i = 0; i < newClients.length; i++) {
+      if (newClients[i].id == editedClientInfo.id) {
+        var newClientItem = _extends({}, newClients[i]);
+        newClientItem = _extends({}, editedClientInfo);
+        newClients[i] = newClientItem;
+      }
+    }
+    setStateClientsList(newClients);
+  };
 
-            switch (this.state.sortMode) {
-                case 0:
-                    clientsComponents = this.state.stateClientsList.map(function (client) {
-                        return _react2.default.createElement(_MobileClient2.default, { clientInfo: client, key: client.id });
-                    });
-                    break;
-                case 1:
-                    var clientsSortedByActive = this.state.stateClientsList.filter(function (client) {
-                        return client.balance >= 0;
-                    });
-                    clientsComponents = clientsSortedByActive.map(function (client) {
-                        return _react2.default.createElement(_MobileClient2.default, { clientInfo: client, key: client.id });
-                    });
-                    break;
-                case 2:
-                    var clientsSortedByBlocked = this.state.stateClientsList.filter(function (client) {
-                        return client.balance < 0;
-                    });
-                    clientsComponents = clientsSortedByBlocked.map(function (client) {
-                        return _react2.default.createElement(_MobileClient2.default, { clientInfo: client, key: client.id });
-                    });
-                    break;
-            }
+  var addClientHandler = function addClientHandler() {
+    var newClients = [].concat(_toConsumableArray(stateClientsList));
+    var newClientId = newClients.slice(-1)[0] ? newClients.slice(-1)[0].id + 1 : 100; //if no clients exist, new client will have id 100, else last client id + 1
+    newClients.push({
+      id: newClientId,
+      firstName: null,
+      secondName: null,
+      surname: null,
+      balance: 0
+    });
+    setStateClientsList(newClients);
+  };
 
-            console.log('MobileBlock render');
+  var sortByActive = function sortByActive() {
+    setSortMode(1);
+  };
 
-            return _react2.default.createElement(
-                "div",
-                { className: "MobileBlock" },
-                _react2.default.createElement(
-                    "button",
-                    { type: "button", className: "btn btn-secondary", onClick: this.sortCancel },
-                    "\u0412\u0441\u0435"
-                ),
-                _react2.default.createElement(
-                    "button",
-                    { type: "button", className: "btn btn-secondary", onClick: this.sortByActive },
-                    "\u0410\u043A\u0442\u0438\u0432\u043D\u044B\u0435"
-                ),
-                _react2.default.createElement(
-                    "button",
-                    { type: "button", className: "btn btn-secondary", onClick: this.sortByBlocked },
-                    "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435"
-                ),
-                _react2.default.createElement(
-                    "table",
-                    { className: "table" },
-                    _react2.default.createElement(
-                        "thead",
-                        { className: "thead-dark" },
-                        _react2.default.createElement(
-                            "tr",
-                            null,
-                            _react2.default.createElement(
-                                "th",
-                                { scope: "col" },
-                                "id"
-                            ),
-                            _react2.default.createElement(
-                                "th",
-                                { scope: "col" },
-                                "\u0424\u0430\u043C\u0438\u043B\u0438\u044F"
-                            ),
-                            _react2.default.createElement(
-                                "th",
-                                { scope: "col" },
-                                "\u0418\u043C\u044F"
-                            ),
-                            _react2.default.createElement(
-                                "th",
-                                { scope: "col" },
-                                "\u041E\u0442\u0447\u0435\u0441\u0442\u0432\u043E"
-                            ),
-                            _react2.default.createElement(
-                                "th",
-                                { scope: "col" },
-                                "\u0411\u0430\u043B\u0430\u043D\u0441"
-                            ),
-                            _react2.default.createElement(
-                                "th",
-                                { scope: "col" },
-                                "\u0421\u0442\u0430\u0442\u0443\u0441"
-                            ),
-                            _react2.default.createElement(
-                                "th",
-                                { scope: "col" },
-                                "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
-                            ),
-                            _react2.default.createElement(
-                                "th",
-                                { scope: "col" },
-                                "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
-                            )
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "tbody",
-                        null,
-                        clientsComponents
-                    )
-                ),
-                _react2.default.createElement(
-                    "button",
-                    { type: "button", className: "btn btn-primary", onClick: this.addClientHandler },
-                    "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A\u043B\u0438\u0435\u043D\u0442\u0430"
-                )
-            );
-        }
-    }]);
+  var sortByBlocked = function sortByBlocked() {
+    setSortMode(2);
+  };
 
-    return MobileBlock;
-}(_react2.default.PureComponent);
+  var sortCancel = function sortCancel() {
+    setSortMode(0);
+  };
+
+  var clientsComponents = void 0;
+
+  switch (sortMode) {
+    case 0:
+      clientsComponents = stateClientsList.map(function (client) {
+        return _react2.default.createElement(_MobileClient2.default, { clientInfo: client, key: client.id });
+      });
+      break;
+    case 1:
+      var clientsSortedByActive = stateClientsList.filter(function (client) {
+        return client.balance >= 0;
+      });
+      clientsComponents = clientsSortedByActive.map(function (client) {
+        return _react2.default.createElement(_MobileClient2.default, { clientInfo: client, key: client.id });
+      });
+      break;
+    case 2:
+      var clientsSortedByBlocked = stateClientsList.filter(function (client) {
+        return client.balance < 0;
+      });
+      clientsComponents = clientsSortedByBlocked.map(function (client) {
+        return _react2.default.createElement(_MobileClient2.default, { clientInfo: client, key: client.id });
+      });
+      break;
+  }
+
+  console.log("MobileBlock render");
+
+  return _react2.default.createElement(
+    "div",
+    { className: "MobileBlock" },
+    _react2.default.createElement(
+      "button",
+      { type: "button", className: "btn btn-secondary", onClick: sortCancel },
+      "\u0412\u0441\u0435"
+    ),
+    _react2.default.createElement(
+      "button",
+      {
+        type: "button",
+        className: "btn btn-secondary",
+        onClick: sortByActive
+      },
+      "\u0410\u043A\u0442\u0438\u0432\u043D\u044B\u0435"
+    ),
+    _react2.default.createElement(
+      "button",
+      {
+        type: "button",
+        className: "btn btn-secondary",
+        onClick: sortByBlocked
+      },
+      "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435"
+    ),
+    _react2.default.createElement(
+      "table",
+      { className: "table" },
+      _react2.default.createElement(
+        "thead",
+        { className: "thead-dark" },
+        _react2.default.createElement(
+          "tr",
+          null,
+          _react2.default.createElement(
+            "th",
+            { scope: "col" },
+            "id"
+          ),
+          _react2.default.createElement(
+            "th",
+            { scope: "col" },
+            "\u0424\u0430\u043C\u0438\u043B\u0438\u044F"
+          ),
+          _react2.default.createElement(
+            "th",
+            { scope: "col" },
+            "\u0418\u043C\u044F"
+          ),
+          _react2.default.createElement(
+            "th",
+            { scope: "col" },
+            "\u041E\u0442\u0447\u0435\u0441\u0442\u0432\u043E"
+          ),
+          _react2.default.createElement(
+            "th",
+            { scope: "col" },
+            "\u0411\u0430\u043B\u0430\u043D\u0441"
+          ),
+          _react2.default.createElement(
+            "th",
+            { scope: "col" },
+            "\u0421\u0442\u0430\u0442\u0443\u0441"
+          ),
+          _react2.default.createElement(
+            "th",
+            { scope: "col" },
+            "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
+          ),
+          _react2.default.createElement(
+            "th",
+            { scope: "col" },
+            "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
+          )
+        )
+      ),
+      _react2.default.createElement(
+        "tbody",
+        null,
+        clientsComponents
+      )
+    ),
+    _react2.default.createElement(
+      "button",
+      {
+        type: "button",
+        className: "btn btn-primary",
+        onClick: addClientHandler
+      },
+      "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A\u043B\u0438\u0435\u043D\u0442\u0430"
+    )
+  );
+};
 
 MobileBlock.propTypes = {
-    clientsList: _propTypes2.default.arrayOf(_propTypes2.default.shape({
-        id: _propTypes2.default.number.isRequired,
-        firstName: _propTypes2.default.string.isRequired,
-        secondName: _propTypes2.default.string.isRequired,
-        surname: _propTypes2.default.string.isRequired,
-        balance: _propTypes2.default.number.isRequired
-    }))
+  clientsList: _propTypes2.default.arrayOf(_propTypes2.default.shape({
+    id: _propTypes2.default.number.isRequired,
+    firstName: _propTypes2.default.string.isRequired,
+    secondName: _propTypes2.default.string.isRequired,
+    surname: _propTypes2.default.string.isRequired,
+    balance: _propTypes2.default.number.isRequired
+  }))
 };
-exports.default = MobileBlock;
+
+exports.default = _react2.default.memo(MobileBlock);
 
 /***/ }),
 /* 21 */
@@ -31818,10 +31820,10 @@ module.exports = function() {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _react = __webpack_require__(1);
 
@@ -31839,159 +31841,164 @@ var _eventFlow2 = _interopRequireDefault(_eventFlow);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var MobileClient = function MobileClient(_ref) {
+  var clientInfo = _ref.clientInfo;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+  var _useState = (0, _react.useState)(clientInfo),
+      _useState2 = _slicedToArray(_useState, 2),
+      stateClientInfo = _useState2[0],
+      setStateClientInfo = _useState2[1];
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+  var _useState3 = (0, _react.useState)(clientInfo.firstName == null ? true : false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isEditMode = _useState4[0],
+      setIsEditMode = _useState4[1];
 
-var MobileClient = function (_React$PureComponent) {
-    _inherits(MobileClient, _React$PureComponent);
+  var _useState5 = (0, _react.useState)(clientInfo.balance < 0),
+      _useState6 = _slicedToArray(_useState5, 2),
+      isBlocked = _useState6[0],
+      setIsBlocked = _useState6[1];
 
-    function MobileClient() {
-        var _ref;
+  var oldState = (0, _react.useRef)();
 
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, MobileClient);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MobileClient.__proto__ || Object.getPrototypeOf(MobileClient)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-            stateClientInfo: _this.props.clientInfo,
-            isEditMode: _this.props.clientInfo.firstName == null ? true : false,
-            isBlocked: _this.props.clientInfo.balance < 0
-        }, _this.firstNameRef = _react2.default.createRef(), _this.secondNameRef = _react2.default.createRef(), _this.surnameRef = _react2.default.createRef(), _this.balanceRef = _react2.default.createRef(), _this.deleteHandler = function () {
-            _eventFlow2.default.emit('clientDelete', _this.state.stateClientInfo.id);
-        }, _this.editHandler = function () {
-            _this.setState({ isEditMode: true });
-        }, _this.saveHandler = function () {
-            var editedClientInfo = {
-                id: _this.state.stateClientInfo.id,
-                firstName: _this.firstNameRef.current.value,
-                secondName: _this.secondNameRef.current.value,
-                surname: _this.surnameRef.current.value,
-                balance: parseFloat(_this.balanceRef.current.value)
-            };
-
-            _eventFlow2.default.emit('clientSave', editedClientInfo);
-        }, _temp), _possibleConstructorReturn(_this, _ret);
+  (0, _react.useEffect)(function () {
+    if (clientInfo !== oldState.stateClientInfo) {
+      setStateClientInfo(clientInfo);
+      setIsEditMode(clientInfo.firstName == null ? true : false);
+      setIsBlocked(clientInfo.balance < 0);
     }
 
-    _createClass(MobileClient, [{
-        key: "componentDidUpdate",
-        value: function componentDidUpdate(oldProps, oldState) {
-            if (this.props.clientInfo != oldState.stateClientInfo) {
-                this.setState({
-                    stateClientInfo: this.props.clientInfo,
-                    isEditMode: false,
-                    isBlocked: this.props.clientInfo.balance < 0
-                });
-            }
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            console.log('MobileClient ' + this.state.stateClientInfo.id + ' render');
-            return _react2.default.createElement(
-                "tr",
-                { className: "MobileClient" },
-                _react2.default.createElement(
-                    "th",
-                    { scope: "row" },
-                    this.state.stateClientInfo.id
-                ),
-                _react2.default.createElement(
-                    "td",
-                    null,
-                    this.state.isEditMode ? _react2.default.createElement("input", {
-                        type: "text",
-                        defaultValue: this.state.stateClientInfo.firstName,
-                        ref: this.firstNameRef }) : this.state.stateClientInfo.firstName
-                ),
-                _react2.default.createElement(
-                    "td",
-                    null,
-                    this.state.isEditMode ? _react2.default.createElement("input", {
-                        type: "text",
-                        defaultValue: this.state.stateClientInfo.secondName,
-                        ref: this.secondNameRef }) : this.state.stateClientInfo.secondName
-                ),
-                _react2.default.createElement(
-                    "td",
-                    null,
-                    this.state.isEditMode ? _react2.default.createElement("input", {
-                        type: "text",
-                        defaultValue: this.state.stateClientInfo.surname,
-                        ref: this.surnameRef }) : this.state.stateClientInfo.surname
-                ),
-                _react2.default.createElement(
-                    "td",
-                    null,
-                    this.state.isEditMode ? _react2.default.createElement("input", {
-                        type: "number",
-                        defaultValue: this.state.stateClientInfo.balance,
-                        ref: this.balanceRef }) : this.state.stateClientInfo.balance
-                ),
-                this.state.isBlocked ? _react2.default.createElement(
-                    "td",
-                    { className: "clientBlocked" },
-                    "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D"
-                ) : _react2.default.createElement(
-                    "td",
-                    { className: "clientActive" },
-                    "\u0410\u043A\u0442\u0438\u0432\u0435\u043D"
-                ),
-                _react2.default.createElement(
-                    "td",
-                    null,
-                    this.state.isEditMode ? _react2.default.createElement(
-                        "button",
-                        {
-                            type: "button",
-                            className: "btn btn-outline-success",
-                            onClick: this.saveHandler },
-                        "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
-                    ) : _react2.default.createElement(
-                        "button",
-                        {
-                            type: "button",
-                            className: "btn btn-outline-warning",
-                            onClick: this.editHandler },
-                        "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
-                    )
-                ),
-                _react2.default.createElement(
-                    "td",
-                    null,
-                    _react2.default.createElement(
-                        "button",
-                        {
-                            type: "button",
-                            className: "btn btn-outline-danger",
-                            onClick: this.deleteHandler },
-                        "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
-                    )
-                )
-            );
-        }
-    }]);
+    oldState.current = { stateClientInfo: stateClientInfo, isEditMode: isEditMode, isBlocked: isBlocked };
+  }, [clientInfo]);
 
-    return MobileClient;
-}(_react2.default.PureComponent);
+  var firstNameRef = (0, _react.useRef)();
+  var secondNameRef = (0, _react.useRef)();
+  var surnameRef = (0, _react.useRef)();
+  var balanceRef = (0, _react.useRef)();
+
+  var deleteHandler = function deleteHandler() {
+    _eventFlow2.default.emit("clientDelete", stateClientInfo.id);
+  };
+
+  var editHandler = function editHandler() {
+    setIsEditMode(true);
+  };
+
+  var saveHandler = function saveHandler() {
+    var editedClientInfo = {
+      id: stateClientInfo.id,
+      firstName: firstNameRef.current.value,
+      secondName: secondNameRef.current.value,
+      surname: surnameRef.current.value,
+      balance: parseFloat(balanceRef.current.value)
+    };
+
+    _eventFlow2.default.emit("clientSave", editedClientInfo);
+  };
+
+  console.log("MobileClient " + stateClientInfo.id + " render");
+
+  return _react2.default.createElement(
+    "tr",
+    { className: "MobileClient" },
+    _react2.default.createElement(
+      "th",
+      { scope: "row" },
+      stateClientInfo.id
+    ),
+    _react2.default.createElement(
+      "td",
+      null,
+      isEditMode ? _react2.default.createElement("input", {
+        type: "text",
+        defaultValue: stateClientInfo.firstName,
+        ref: firstNameRef
+      }) : stateClientInfo.firstName
+    ),
+    _react2.default.createElement(
+      "td",
+      null,
+      isEditMode ? _react2.default.createElement("input", {
+        type: "text",
+        defaultValue: stateClientInfo.secondName,
+        ref: secondNameRef
+      }) : stateClientInfo.secondName
+    ),
+    _react2.default.createElement(
+      "td",
+      null,
+      isEditMode ? _react2.default.createElement("input", {
+        type: "text",
+        defaultValue: stateClientInfo.surname,
+        ref: surnameRef
+      }) : stateClientInfo.surname
+    ),
+    _react2.default.createElement(
+      "td",
+      null,
+      isEditMode ? _react2.default.createElement("input", {
+        type: "number",
+        defaultValue: stateClientInfo.balance,
+        ref: balanceRef
+      }) : stateClientInfo.balance
+    ),
+    isBlocked ? _react2.default.createElement(
+      "td",
+      { className: "clientBlocked" },
+      "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D"
+    ) : _react2.default.createElement(
+      "td",
+      { className: "clientActive" },
+      "\u0410\u043A\u0442\u0438\u0432\u0435\u043D"
+    ),
+    _react2.default.createElement(
+      "td",
+      null,
+      isEditMode ? _react2.default.createElement(
+        "button",
+        {
+          type: "button",
+          className: "btn btn-outline-success",
+          onClick: saveHandler
+        },
+        "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
+      ) : _react2.default.createElement(
+        "button",
+        {
+          type: "button",
+          className: "btn btn-outline-warning",
+          onClick: editHandler
+        },
+        "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
+      )
+    ),
+    _react2.default.createElement(
+      "td",
+      null,
+      _react2.default.createElement(
+        "button",
+        {
+          type: "button",
+          className: "btn btn-outline-danger",
+          onClick: deleteHandler
+        },
+        "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
+      )
+    )
+  );
+};
 
 MobileClient.propTypes = {
-    clientInfo: _propTypes2.default.shape({
-        id: _propTypes2.default.number,
-        firstName: _propTypes2.default.string,
-        secondName: _propTypes2.default.string,
-        surname: _propTypes2.default.string,
-        balance: _propTypes2.default.number
-    })
+  clientInfo: _propTypes2.default.shape({
+    id: _propTypes2.default.number,
+    firstName: _propTypes2.default.string,
+    secondName: _propTypes2.default.string,
+    surname: _propTypes2.default.string,
+    balance: _propTypes2.default.number
+  })
 };
-exports.default = MobileClient;
+
+exports.default = _react2.default.memo(MobileClient);
 
 /***/ }),
 /* 28 */
