@@ -1,139 +1,175 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 
-import './MobileBlock.css'
+import "./MobileBlock.css";
 
-import MobileClient from '../MobileClient/MobileClient'
+import MobileClient from "../MobileClient/MobileClient";
 
 import mobileEvents from "../eventFlow";
 
-class MobileBlock extends React.PureComponent {
+const MobileBlock = ({ clientsList }) => {
+  const [stateClientsList, setStateClientsList] = useState(clientsList);
+  const [sortMode, setSortMode] = useState(0); // 0 - all, 1 - sorted by active, 2 - sorted by blocked
 
-    static propTypes = {
-        clientsList: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.number.isRequired,
-                firstName: PropTypes.string.isRequired,
-                secondName: PropTypes.string.isRequired,
-                surname: PropTypes.string.isRequired,
-                balance: PropTypes.number.isRequired,
-            })
-        )
+  useEffect(() => {
+    mobileEvents.addListener("clientDelete", deleteHandler);
+    mobileEvents.addListener("clientSave", saveHandler);
+    return () => {
+      mobileEvents.removeListener("clientDelete", deleteHandler);
+      mobileEvents.removeListener("clientSave", saveHandler);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log(
+      "CURRENT STATE DID MOUNT: " +
+        stateClientsList.map((item) => item.id).join(" ")
+    );
+    return () => {
+      console.log(
+        "CURRENT STATE BEFORE UNMOUNT: " +
+          stateClientsList.map((item) => item.id).join(" ")
+      );
+    };
+  });
+
+  const deleteHandler = (clientId) => {
+    let newClients = [...stateClientsList];
+    console.log(
+      "got from state " + newClients.map((item) => item.id).join(" ")
+    );
+    for (let i = 0; i < newClients.length; i++) {
+      if (newClients[i].id == clientId) {
+        console.log("find to delete " + newClients[i].id);
+        newClients.splice(i, 1);
+      }
     }
+    console.log("send to state " + newClients.map((item) => item.id).join(" "));
+    setStateClientsList(newClients);
+  };
 
-    state = {
-        stateClientsList: this.props.clientsList,
-        sortMode: 0, // 0 - all, 1 - sorted by active, 2 - sorted by blocked
+  const saveHandler = (editedClientInfo) => {
+    let newClients = [...stateClientsList];
+    for (let i = 0; i < newClients.length; i++) {
+      if (newClients[i].id == editedClientInfo.id) {
+        let newClientItem = { ...newClients[i] };
+        newClientItem = { ...editedClientInfo };
+        newClients[i] = newClientItem;
+      }
     }
+    setStateClientsList(newClients);
+  };
 
-    componentDidMount() {
-        mobileEvents.addListener('clientDelete', this.deleteHandler);
-        mobileEvents.addListener('clientSave', this.saveHandler);
-    }
+  const addClientHandler = () => {
+    const newClients = [...stateClientsList];
+    const newClientId = newClients.slice(-1)[0]
+      ? newClients.slice(-1)[0].id + 1
+      : 100; //if no clients exist, new client will have id 100, else last client id + 1
+    newClients.push({
+      id: newClientId,
+      firstName: null,
+      secondName: null,
+      surname: null,
+      balance: 0,
+    });
+    setStateClientsList(newClients);
+  };
 
-    componentWillUnmount() {
-        mobileEvents.removeListener('clientDelete', this.deleteHandler);
-        mobileEvents.removeListener('clientSave', this.saveHandler);
-    }
+  const sortByActive = () => {
+    setSortMode(1);
+  };
 
-    deleteHandler = (clientId) => {
-        let newClients = [...this.state.stateClientsList];
-        for (let i = 0; i < newClients.length; i++) {
-            if (newClients[i].id == clientId) {
-                newClients.splice(i, 1);
-            }
-        }
-        this.setState({ stateClientsList: newClients })
-    }
+  const sortByBlocked = () => {
+    setSortMode(2);
+  };
 
-    saveHandler = (editedClientInfo) => {
-        let newClients = [...this.state.stateClientsList];
-        for (let i = 0; i < newClients.length; i++) {
-            if (newClients[i].id == editedClientInfo.id) {
-                let newClientItem = { ...newClients[i] };
-                newClientItem = { ...editedClientInfo };
-                newClients[i] = newClientItem;
-            }
-        }
-        this.setState({ stateClientsList: newClients })
-    }
+  const sortCancel = () => {
+    setSortMode(0);
+  };
 
-    addClientHandler = () => {
-        const newClients = [...this.state.stateClientsList];
-        const newClientId = newClients.slice(-1)[0] ?
-            newClients.slice(-1)[0].id + 1 :
-            100; //if no clients exist, new client will have id 100, else last client id + 1 
-        newClients.push({
-            id: newClientId,
-            firstName: null,
-            secondName: null,
-            surname: null,
-            balance: 0,
-        })
-        this.setState({ stateClientsList: newClients })
-    }
+  let clientsComponents;
 
-    sortByActive = () => {
-        this.setState({ sortMode: 1 })
-    }
+  switch (sortMode) {
+    case 0:
+      clientsComponents = stateClientsList.map((client) => (
+        <MobileClient clientInfo={client} key={client.id}></MobileClient>
+      ));
+      break;
+    case 1:
+      const clientsSortedByActive = stateClientsList.filter(
+        (client) => client.balance >= 0
+      );
+      clientsComponents = clientsSortedByActive.map((client) => (
+        <MobileClient clientInfo={client} key={client.id}></MobileClient>
+      ));
+      break;
+    case 2:
+      const clientsSortedByBlocked = stateClientsList.filter(
+        (client) => client.balance < 0
+      );
+      clientsComponents = clientsSortedByBlocked.map((client) => (
+        <MobileClient clientInfo={client} key={client.id}></MobileClient>
+      ));
+      break;
+  }
 
-    sortByBlocked = () => {
-        this.setState({ sortMode: 2 })
-    }
+  console.log("MobileBlock render");
 
-    sortCancel = () => {
-        this.setState({ sortMode: 0 })
-    }
+  return (
+    <div className="MobileBlock">
+      <button type="button" className="btn btn-secondary" onClick={sortCancel}>
+        Все
+      </button>
+      <button
+        type="button"
+        className="btn btn-secondary"
+        onClick={sortByActive}
+      >
+        Активные
+      </button>
+      <button
+        type="button"
+        className="btn btn-secondary"
+        onClick={sortByBlocked}
+      >
+        Заблокированные
+      </button>
+      <table className="table">
+        <thead className="thead-dark">
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Фамилия</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Отчество</th>
+            <th scope="col">Баланс</th>
+            <th scope="col">Статус</th>
+            <th scope="col">Редактировать</th>
+            <th scope="col">Удалить</th>
+          </tr>
+        </thead>
+        <tbody>{clientsComponents}</tbody>
+      </table>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={addClientHandler}
+      >
+        Добавить клиента
+      </button>
+    </div>
+  );
+};
 
-    render() {
+MobileBlock.propTypes = {
+  clientsList: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      firstName: PropTypes.string.isRequired,
+      secondName: PropTypes.string.isRequired,
+      surname: PropTypes.string.isRequired,
+      balance: PropTypes.number.isRequired,
+    })
+  ),
+};
 
-        let clientsComponents;
-
-        switch (this.state.sortMode) {
-            case 0:
-                clientsComponents = this.state.stateClientsList.map(
-                    client => <MobileClient clientInfo={client} key={client.id}></MobileClient>);
-                break;
-            case 1:
-                const clientsSortedByActive = this.state.stateClientsList.filter(client => client.balance >= 0)
-                clientsComponents = clientsSortedByActive.map(
-                    client => <MobileClient clientInfo={client} key={client.id}></MobileClient>);
-                break;
-            case 2:
-                const clientsSortedByBlocked = this.state.stateClientsList.filter(client => client.balance < 0)
-                clientsComponents = clientsSortedByBlocked.map(
-                    client => <MobileClient clientInfo={client} key={client.id}></MobileClient>);
-                break;
-        }
-
-        console.log('MobileBlock render');
-
-        return (
-            <div className="MobileBlock">
-                <button type="button" className="btn btn-secondary" onClick={this.sortCancel}>Все</button>
-                <button type="button" className="btn btn-secondary" onClick={this.sortByActive}>Активные</button>
-                <button type="button" className="btn btn-secondary" onClick={this.sortByBlocked}>Заблокированные</button>
-                <table className="table">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th scope="col">id</th>
-                            <th scope="col">Фамилия</th>
-                            <th scope="col">Имя</th>
-                            <th scope="col">Отчество</th>
-                            <th scope="col">Баланс</th>
-                            <th scope="col">Статус</th>
-                            <th scope="col">Редактировать</th>
-                            <th scope="col">Удалить</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {clientsComponents}
-                    </tbody>
-                </table>
-                <button type="button" className="btn btn-primary" onClick={this.addClientHandler}>Добавить клиента</button>
-            </div>
-        );
-    }
-}
-
-export default MobileBlock;
+export default React.memo(MobileBlock);
