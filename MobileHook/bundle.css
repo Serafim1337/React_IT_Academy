@@ -1,0 +1,21 @@
+.MobileBlock td {
+  width: 140px;
+}
+.MobileClient input {
+  width: 120px;
+}
+
+.MobileClient .clientActive {
+  background-color: rgb(40, 183, 40);
+}
+
+.MobileClient .clientBlocked {
+  background-color: rgb(201, 80, 80);
+}
+#container {
+  margin: 0 auto;
+  width: fit-content;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/*# sourceMappingURL=bundle.css.map*/
