@@ -22,13 +22,11 @@ const MobileBlock = ({ clientsList }) => {
 
   const deleteHandler = (clientId) => {
     let newClients = [...stateClientsList];
-
     for (let i = 0; i < newClients.length; i++) {
       if (newClients[i].id == clientId) {
         newClients.splice(i, 1);
       }
     }
-
     setStateClientsList(newClients);
   };
 
