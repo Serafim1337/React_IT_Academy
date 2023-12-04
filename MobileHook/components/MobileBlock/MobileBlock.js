@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import PropTypes, { object } from "prop-types";
 
 import "./MobileBlock.css";
 
@@ -21,30 +21,34 @@ const MobileBlock = ({ clientsList }) => {
   }, []);
 
   const deleteHandler = (clientId) => {
-    let newClients = [...stateClientsList];
-    for (let i = 0; i < newClients.length; i++) {
-      if (newClients[i].id == clientId) {
-        newClients.splice(i, 1);
-      }
-    }
-    setStateClientsList(newClients);
-  };
+    setStateClientsList((currentStateClientsList) => {
+      let newClients = [...currentStateClientsList];
 
+      for (let i = 0; i < newClients.length; i++) {
+        if (newClients[i].id == clientId) {
+          newClients.splice(i, 1);
+          break;
+        }
+      }
+
+      return newClients;
+    });
+  };
+  // todo rewrite
   const saveHandler = (editedClientInfo) => {
     let newClients = [...stateClientsList];
     for (let i = 0; i < newClients.length; i++) {
       if (newClients[i].id == editedClientInfo.id) {
-        let newClientItem = { ...newClients[i] };
-        newClientItem = { ...editedClientInfo };
-        newClients[i] = newClientItem;
+        newClients[i] = { ...newClients[i], ...editedClientInfo };
       }
     }
     setStateClientsList(newClients);
   };
-
+  // todo rewrite
   const addClientHandler = () => {
+    // TODO try useId
     const newClients = [...stateClientsList];
-    const newClientId = newClients.slice(-1)[0]
+    const newClientId = newClients.length
       ? newClients.slice(-1)[0].id + 1
       : 100; //if no clients exist, new client will have id 100, else last client id + 1
     newClients.push({
@@ -56,6 +60,8 @@ const MobileBlock = ({ clientsList }) => {
     });
     setStateClientsList(newClients);
   };
+
+  // TODO refactor
 
   const sortByActive = () => {
     setSortMode(1);
@@ -69,34 +75,15 @@ const MobileBlock = ({ clientsList }) => {
     setSortMode(0);
   };
 
-  let clientsComponents;
-
-  switch (sortMode) {
-    case 0:
-      clientsComponents = stateClientsList.map((client) => (
-        <MobileClient clientInfo={client} key={client.id}></MobileClient>
-      ));
-      break;
-    case 1:
-      const clientsSortedByActive = stateClientsList.filter(
-        (client) => client.balance >= 0
-      );
-      clientsComponents = clientsSortedByActive.map((client) => (
-        <MobileClient clientInfo={client} key={client.id}></MobileClient>
-      ));
-      break;
-    case 2:
-      const clientsSortedByBlocked = stateClientsList.filter(
-        (client) => client.balance < 0
-      );
-      clientsComponents = clientsSortedByBlocked.map((client) => (
-        <MobileClient clientInfo={client} key={client.id}></MobileClient>
-      ));
-      break;
-  }
-
-  console.log("MobileBlock render");
-
+  const sortedClientsList = useMemo(() => {
+    let sorted = stateClientsList;
+    if (sortMode === 1) {
+      sorted = sorted.filter((client) => client.balance >= 0);
+    } else if (sortMode === 2) {
+      sorted = sorted.filter((client) => client.balance < 0);
+    }
+    return sorted;
+  }, [sortMode, stateClientsList]);
   return (
     <div className="MobileBlock">
       <button type="button" className="btn btn-secondary" onClick={sortCancel}>
@@ -129,7 +116,11 @@ const MobileBlock = ({ clientsList }) => {
             <th scope="col">Удалить</th>
           </tr>
         </thead>
-        <tbody>{clientsComponents}</tbody>
+        <tbody>
+          {sortedClientsList.map((client) => (
+            <MobileClient clientInfo={client} key={client.id}></MobileClient>
+          ))}
+        </tbody>
       </table>
       <button
         type="button"

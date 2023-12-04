@@ -12,16 +12,10 @@ const MobileClient = ({ clientInfo }) => {
   );
   const [isBlocked, setIsBlocked] = useState(clientInfo.balance < 0);
 
-  const oldState = useRef();
-
   useEffect(() => {
-    if (clientInfo !== oldState.stateClientInfo) {
-      setStateClientInfo(clientInfo);
-      setIsEditMode(clientInfo.firstName == null ? true : false);
-      setIsBlocked(clientInfo.balance < 0);
-    }
-
-    oldState.current = { stateClientInfo, isEditMode, isBlocked };
+    setStateClientInfo(clientInfo);
+    setIsEditMode(clientInfo.firstName == null ? true : false);
+    setIsBlocked(clientInfo.balance < 0);
   }, [clientInfo]);
 
   const firstNameRef = useRef();
@@ -48,8 +42,6 @@ const MobileClient = ({ clientInfo }) => {
 
     mobileEvents.emit("clientSave", editedClientInfo);
   };
-
-  console.log("MobileClient " + stateClientInfo.id + " render");
 
   return (
     <tr className="MobileClient">
@@ -82,7 +74,7 @@ const MobileClient = ({ clientInfo }) => {
             type="text"
             defaultValue={stateClientInfo.surname}
             ref={surnameRef}
-          ></input>
+          />
         ) : (
           stateClientInfo.surname
         )}
