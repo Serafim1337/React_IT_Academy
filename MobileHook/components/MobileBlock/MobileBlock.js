@@ -34,7 +34,7 @@ const MobileBlock = ({ clientsList }) => {
       return newClients;
     });
   };
-  // todo rewrite
+
   const saveHandler = (editedClientInfo) => {
     let newClients = [...stateClientsList];
     for (let i = 0; i < newClients.length; i++) {
@@ -42,37 +42,37 @@ const MobileBlock = ({ clientsList }) => {
         newClients[i] = { ...newClients[i], ...editedClientInfo };
       }
     }
-    setStateClientsList(newClients);
-  };
-  // todo rewrite
-  const addClientHandler = () => {
-    // TODO try useId
-    const newClients = [...stateClientsList];
-    const newClientId = newClients.length
-      ? newClients.slice(-1)[0].id + 1
-      : 100; //if no clients exist, new client will have id 100, else last client id + 1
-    newClients.push({
-      id: newClientId,
-      firstName: null,
-      secondName: null,
-      surname: null,
-      balance: 0,
+    setStateClientsList((currentStateClientsList) => {
+      let newClients = [...currentStateClientsList];
+      for (let i = 0; i < newClients.length; i++) {
+        if (newClients[i].id == editedClientInfo.id) {
+          newClients[i] = { ...newClients[i], ...editedClientInfo };
+        }
+      }
+      return newClients;
     });
-    setStateClientsList(newClients);
   };
 
-  // TODO refactor
-
-  const sortByActive = () => {
-    setSortMode(1);
+  const addClientHandler = () => {
+    setStateClientsList((currentStateClientsList) => {
+      const newClients = [...currentStateClientsList];
+      const newClientId = newClients.length
+        ? newClients.slice(-1)[0].id + 1
+        : 100; //if no clients exist, new client will have id 100, else last client id + 1
+      newClients.push({
+        id: newClientId,
+        firstName: null,
+        secondName: null,
+        surname: null,
+        balance: 0,
+      });
+      return newClients;
+    });
   };
 
-  const sortByBlocked = () => {
-    setSortMode(2);
-  };
-
-  const sortCancel = () => {
-    setSortMode(0);
+  const sortBy = (e) => {
+    const { sorttype } = e.target.dataset;
+    setSortMode(parseInt(sorttype));
   };
 
   const sortedClientsList = useMemo(() => {
@@ -86,20 +86,27 @@ const MobileBlock = ({ clientsList }) => {
   }, [sortMode, stateClientsList]);
   return (
     <div className="MobileBlock">
-      <button type="button" className="btn btn-secondary" onClick={sortCancel}>
+      <button
+        data-sortType="0"
+        type="button"
+        className="btn btn-secondary"
+        onClick={sortBy}
+      >
         Все
       </button>
       <button
+        data-sortType="1"
         type="button"
         className="btn btn-secondary"
-        onClick={sortByActive}
+        onClick={sortBy}
       >
         Активные
       </button>
       <button
+        data-sortType="2"
         type="button"
         className="btn btn-secondary"
-        onClick={sortByBlocked}
+        onClick={sortBy}
       >
         Заблокированные
       </button>
@@ -122,13 +129,15 @@ const MobileBlock = ({ clientsList }) => {
           ))}
         </tbody>
       </table>
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={addClientHandler}
-      >
-        Добавить клиента
-      </button>
+      {sortMode === 0 && (
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={addClientHandler}
+        >
+          Добавить клиента
+        </button>
+      )}
     </div>
   );
 };

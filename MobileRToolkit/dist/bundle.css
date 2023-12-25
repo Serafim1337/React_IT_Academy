@@ -1,0 +1,14 @@
+.MobileBlock td {
+  width: 140px;
+}
+.MobileClient input {
+  width: 120px;
+}
+.MobileClient .clientActive {
+  background-color: #28b728;
+}
+.MobileClient .clientBlocked {
+  background-color: #c95050;
+}
+
+/*# sourceMappingURL=bundle.css.map*/
