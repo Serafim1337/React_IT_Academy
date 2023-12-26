@@ -1,19 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+
+import { saveClient, deleteClient } from "../../redux/slices/clientsSlice";
 
 import "./MobileClient.scss";
 
-const MobileClient = ({ clientInfo, deleteHandler, saveHandler }) => {
+const MobileClient = ({ clientInfo }) => {
   const [stateClientInfo, setStateClientInfo] = useState(clientInfo);
   const [isEditMode, setIsEditMode] = useState(
-    clientInfo.firstname == null ? true : false
+    clientInfo.firstname === null ? true : false
   );
 
-  console.log(clientInfo.id + " rendered");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setStateClientInfo(clientInfo);
-    setIsEditMode(clientInfo.firstname == null ? true : false);
+    setIsEditMode(clientInfo.firstname === null ? true : false);
   }, [clientInfo]);
 
   const firstNameRef = useRef();
@@ -22,25 +24,27 @@ const MobileClient = ({ clientInfo, deleteHandler, saveHandler }) => {
   const birthdayRef = useRef();
   const genderRef = useRef();
 
-  const deleteClient = () => {
-    deleteHandler(clientInfo.id);
+  const deleteClientInfo = () => {
+    dispatch(deleteClient(clientInfo.id));
   };
 
   const editClient = () => {
     setIsEditMode(true);
   };
 
-  const saveClient = () => {
+  const saveClientInfo = () => {
     let editedClientInfo = {
       id: stateClientInfo.id,
-      firstname: firstNameRef.current.value,
-      lastname: lastNameRef.current.value,
-      email: emailRef.current.value,
-      birthday: birthdayRef.current.value,
-      gender: genderRef.current.value,
+      changes: {
+        firstname: firstNameRef.current.value,
+        lastname: lastNameRef.current.value,
+        email: emailRef.current.value,
+        birthday: birthdayRef.current.value,
+        gender: genderRef.current.value,
+      },
     };
-
-    saveHandler(editedClientInfo);
+    setIsEditMode(false);
+    dispatch(saveClient(editedClientInfo));
   };
 
   return (
@@ -115,7 +119,7 @@ const MobileClient = ({ clientInfo, deleteHandler, saveHandler }) => {
           <button
             type="button"
             className="btn btn-outline-success"
-            onClick={saveClient}
+            onClick={saveClientInfo}
           >
             Сохранить
           </button>
@@ -133,7 +137,7 @@ const MobileClient = ({ clientInfo, deleteHandler, saveHandler }) => {
         <button
           type="button"
           className="btn btn-outline-danger"
-          onClick={deleteClient}
+          onClick={deleteClientInfo}
         >
           Удалить
         </button>

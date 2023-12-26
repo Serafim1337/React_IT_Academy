@@ -1,11 +1,11 @@
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
   addNewClient,
-  deleteClient,
   fetchClientsData,
-  saveClient,
+  selectAllClients,
+  selectClientsFetchStatus,
 } from "../../redux/slices/clientsSlice";
 
 import "./MobileBlock.scss";
@@ -13,33 +13,18 @@ import "./MobileBlock.scss";
 import MobileClient from "../MobileClient/MobileClient";
 
 const MobileBlock = () => {
-  const clientsList = useSelector((state) => state.clients.clientsList);
+  const [sortMode, setSortMode] = useState(0); // 0 - all, 1 - sort by male, 2 - sort by female
+
+  const clientsList = useSelector(selectAllClients);
+  const clientsFetchStatus = useSelector(selectClientsFetchStatus);
 
   const dispatch = useDispatch();
 
-  const [sortMode, setSortMode] = useState(0); // 0 - all, 1 - sort by male, 2 - sort by female
-
-  const clientsFetchStatus = useSelector((state) => state.clients.status);
-
   useEffect(() => {
     if (clientsFetchStatus === "idle") {
-      // dispatch(fetchClientsData());
+      dispatch(fetchClientsData());
     }
   }, [dispatch, clientsFetchStatus]);
-
-  const deleteHandler = useCallback(
-    (clientId) => {
-      dispatch(deleteClient(clientId));
-    },
-    [dispatch, deleteClient]
-  );
-
-  const saveHandler = useCallback(
-    (editedClientInfo) => {
-      dispatch(saveClient(editedClientInfo));
-    },
-    [dispatch, saveClient]
-  );
 
   const addClientHandler = () => {
     dispatch(addNewClient());
@@ -101,12 +86,7 @@ const MobileBlock = () => {
         </thead>
         <tbody>
           {sortedClientsList.map((client) => (
-            <MobileClient
-              clientInfo={client}
-              key={client.id}
-              deleteHandler={deleteHandler}
-              saveHandler={saveHandler}
-            ></MobileClient>
+            <MobileClient clientInfo={client} key={client.id}></MobileClient>
           ))}
         </tbody>
       </table>
